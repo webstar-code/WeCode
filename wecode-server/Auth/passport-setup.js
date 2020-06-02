@@ -1,0 +1,57 @@
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const User = require('../Schema/UserSchema');
+require('dotenv').config();
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GoogleClientId,
+    clientSecret: process.env.GoogleClientSecret,
+    callbackURL: 'http://localhost:3000/auth/google/callback'
+},
+    function (accessToken, refreshToken, profile, done) {
+
+        User.findOne({ name: profile.name }, (err, user) => {
+            if (!user) {
+                const user = new User({
+                    name: profile.name.givenName,
+                    email: profile.emails[0].value
+                });
+                user.save()
+                    .then((user) => {
+                        return done(null, user);
+
+                    });
+            } else {
+                return done(null, user);
+            }
+        })
+    }
+))
+
+
+passport.use(new FacebookStrategy({
+    clientID: process.env.FacebookAPPID,
+    clientSecret: process.env.FacebookAPPSECRET,
+    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    profileFields: ["id", "email", "name"]
+},
+    function (accessToken, refreshToken, profile, done) {
+        console.log(profile);
+        User.find({ name: profile.name }, (err, user) => {
+            if (!user) {
+                const user = new User({
+                    name: profile.name.givenName,
+                    email: ''
+                });
+                user.save()
+                    .then((user) => {
+                        return done(null, user);
+                    })
+            }
+            else {
+                return done(null, user);
+            }
+        })
+    }
+))
