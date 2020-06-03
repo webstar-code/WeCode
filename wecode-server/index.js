@@ -7,6 +7,9 @@ require('dotenv').config();
 
 const passportSetup = require('./Auth/passport-setup');
 const authRoute = require('./Routes/authRoute');
+const userprofileRoute = require('./Routes/userprofile');
+const activityRoute = require('./Routes/activity');
+
 const User = require('./Schema/UserSchema');
 const app = express();
 
@@ -37,13 +40,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', authRoute);
+app.use('/', userprofileRoute);
+app.use('/', activityRoute)
 
 app.get('/user', (req, res) => {
     console.log(req.session);
     console.log(req.user);
     let logout = '<a href="/logout">LOGOUT</a>'
     res.send(`Welcome ${req.user.name} <br> ${logout}`);
-
 })
 
 app.get('/', (req, res) => {
