@@ -9,6 +9,7 @@ const passportSetup = require('./Auth/passport-setup');
 const authRoute = require('./Routes/authRoute');
 const userprofileRoute = require('./Routes/userprofile');
 const activityRoute = require('./Routes/activity');
+const searchRoute = require('./Routes/search');
 
 const User = require('./Schema/UserSchema');
 const app = express();
@@ -41,7 +42,8 @@ app.use(passport.session());
 
 app.use('/', authRoute);
 app.use('/', userprofileRoute);
-app.use('/', activityRoute)
+app.use('/', activityRoute);
+app.use('/search', searchRoute);
 
 app.get('/user', (req, res) => {
     console.log(req.session);

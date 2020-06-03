@@ -35,7 +35,7 @@ router.post('/userprofile', (req, res) => {
    
 })
 
-router.get('/:displayname', (req, res) => {
+router.get('/userprofile/:displayname', (req, res) => {
     let displayname = req.params.displayname;
     UserProfile.findOne({displayname: displayname}, (err, user) => {
         if(user) {
@@ -46,6 +46,7 @@ router.get('/:displayname', (req, res) => {
             }
         }else{
             console.error(err);
+            res.send("user not exists.");
         }
         
     })
