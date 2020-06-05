@@ -13,7 +13,7 @@ function App() {
           </Route>
 
           <Route path="/createprofile">
-            <CreateProfile />s
+            <CreateProfile />
           </Route>
         </Switch>
       </BrowserRouter>
