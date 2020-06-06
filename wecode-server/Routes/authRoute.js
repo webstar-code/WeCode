@@ -5,13 +5,13 @@ router.get('/auth/google',
 passport.authenticate('google', { scope: 'openid email profile' }));
 
 router.get('/auth/google/callback',
-passport.authenticate('google', {successRedirect: '/user', failureRedirect: '/login'}));
+passport.authenticate('google', {successRedirect: '/user'}));
 
 
 router.get('/auth/facebook', 
 passport.authenticate('facebook'));
 router.get('/auth/facebook/callback',
-passport.authenticate('facebook', {successRedirect: '/user', failureRedirect: '/login'}));
+passport.authenticate('facebook', {successRedirect: '/'}));
 
 
 router.get('/login', (req, res) => {

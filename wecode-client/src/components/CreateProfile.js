@@ -4,9 +4,7 @@ import AppBar from './AppBar';
 import { ReactComponent as AddProfileicon } from './icons/account_circle.svg';
 
 const CreateProfile = () => {
-
-
-
+    
     return (
         <div className="flex flex-col bg-gray-900 h-full">
             <AppBar />
@@ -16,9 +14,9 @@ const CreateProfile = () => {
                 </AddProfileicon>
 
 
-                <form id="form" encType="multipart/form-data" className="w-4/5 flex flex-col mx-auto p-3">
-                    {/* <label htmlFor="file" className="block font-bold my-2 text-gray-500">ProfileImage</label>
-                    <input type="file" name="file" className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input> */}
+                <form id="form" method="POST" action="http://localhost:3000/userprofile" encType="multipart/form-data" className="w-4/5 flex flex-col mx-auto p-3">
+                    <label htmlFor="file" className="block font-bold my-2 text-gray-500">ProfileImage</label>
+                    <input type="file" name="file" className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
 
                     <label htmlFor="displayname" className="block font-bold my-2 text-gray-500">Displayname</label>
                     <input type="text" name="displayname" className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>

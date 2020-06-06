@@ -17,13 +17,13 @@ connection.once('open',() => {
 
 let storage = new GridStorage({
     url: process.env.DB_CONNECTION,
-    file: (req, File) => {
+    file: (req, file) => {
         return new Promise((resolve ,reject) => {
-            crypto.randomBytes(16, (err, buff) => {
+            crypto.randomBytes(16, (err, buf) => {
                 if(err) {
                     return reject(err);
                 }
-                let filename = buff.toString('hex') + path.extname(file.originalname);
+                let filename = buf.toString('hex') + path.extname(file.originalname);
                 let fileInfo = {
                     filename: filename,
                     bucketName: 'uploads'
@@ -39,59 +39,73 @@ let upload = multer({storage});
 
 const UserProfile = require('../Schema/UserProfileSchema');
 
+
+// router.get('/userprofile', (req, res) => {
+//     res.send("hello");
+//     // console.log(req.body);
+//     // res.json({file: req.file});
+// })
+
+
+// router.post('/userprofile',upload.single('file'), (req, res) => {
+//     console.log(req.file);
+//     res.json({file: req.file});
+// })
+
+
 router.post('/userprofile',upload.single('file'), (req, res) => {
-    res.json(req.file);
+    const newuser = {
+        UserId: req.user.id,
+        displayname: req.body.displayname,
+        name: req.body.name,
+        about: req.body.about,
+        profession: req.body.profession,
+        university: req.body.university,
+        ImageRef: req.file.id
+    };
+
+    UserProfile.findOne({displayname: req.body.displayname}, (err, user) => {
+        if(user) {
+            user.replaceOne(newuser)
+            .then(() => {
+                res.send("profile updated");
+            })
+            .catch(err => {
+                console.error(err);
+            })
+        }else{
+            const user = new UserProfile(newuser);
+            user.save()
+            .then((data) => {
+                res.json(data);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+        }
+    }) 
 })
 
-// router.post('/userprofile', (req, res) => {
-//     const newuser = {
-//         UserId: req.user.id,
-//         displayname: req.body.displayname,
-//         name: req.body.name,
-//         about: req.body.about,
-//         profession: req.body.profession,
-//         university: req.body.university,
-//     };
-// 
-//     UserProfile.findOne({displayname: req.body.displayname}, (err, user) => {
-//         if(user) {
-//             user.replaceOne(newuser)
-//             .then(() => {
-//                 res.send("profile updated");
-//             })
-//             .catch(err => {
-//                 console.error(err);
-//             })
-//         }else{
-//             const user = new UserProfile(newuser);
-//             user.save()
-//             .then(() => {
-//                 res.send("profile created");
-//             })
-//             .catch(err => {
-//                 console.error(err);
-//             })
-//         }
-//     })
-    
-   
-// })
-
-// router.get('/userprofile/:displayname', (req, res) => {
-//     let displayname = req.params.displayname;
-//     UserProfile.findOne({displayname: displayname}, (err, user) => {
-//         if(user) {
-//             if(req.user.id == user.UserId){
-//             res.json({user: user, admin: true});
-//             }else{
-//                 res.json({user: user, admin: false})
-//             }
-//         }else{
-//             console.error(err);
-//             res.send("user not exists.");
-//         }
+router.get('/userprofile/:displayname', (req, res) => {
+    let displayname = req.params.displayname;
+    UserProfile.findOne({displayname: displayname}, (err, user) => {
         
-//     })
-// })
+        if(user) {
+            if(req.user.id == user.UserId){
+                gfs.files.findOne({id: user.ImageRef}, (err, file) => {
+                res.json({user: user,profileImg: file ,admin: true});
+                    
+                })
+            }else{
+                res.json({user: user,profileImg: file ,admin: false});
+
+            }
+        }else{
+            console.error(err);
+            res.send("user not exists.");
+        }
+        
+    })
+})
 
 module.exports = router;

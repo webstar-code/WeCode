@@ -9,6 +9,7 @@ const UserProfileSchema = new mongoose.Schema({
     about: String,
     profession: String,
     university: String,
+    ImageRef: String
 })
 
 const UserProfile = connection.model('UserProfile', UserProfileSchema);
