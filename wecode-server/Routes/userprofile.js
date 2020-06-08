@@ -71,6 +71,7 @@ router.post('/userprofile',upload.single('file'), (req, res) => {
                 res.send("profile updated");
             })
             .catch(err => {
+                res.status(500).json('Internal Server Error');
                 console.error(err);
             })
         }else{
@@ -80,6 +81,7 @@ router.post('/userprofile',upload.single('file'), (req, res) => {
                 res.json(data);
             })
             .catch(err => {
+                res.status(500).json('Internal Server Error');
                 console.error(err);
             })
         }

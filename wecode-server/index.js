@@ -45,21 +45,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', authRoute);
-app.use('/', userprofileRoute);
-app.use('/', activityRoute);
-app.use('/search', searchRoute);
+app.use('/api', userprofileRoute);
+app.use('/api', activityRoute);
+app.use('/api/search', searchRoute);
 
-app.get('/user', (req, res) => {
+app.get('/api/user', (req, res) => {
     console.log(req.session);
     console.log(req.user);
-    let logout = '<a href="/logout">LOGOUT</a>'
-    res.send(`Welcome ${req.user.name} <br> ${logout}`);
+    res.json(req.user);
 })
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.send('<h1>Home page</h1>')
 })
 
-app.listen(3000, () => {
+app.listen(4000, () => {
     console.log("listening on 4000");
 })

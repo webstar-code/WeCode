@@ -7,7 +7,8 @@ require('dotenv').config();
 passport.use(new GoogleStrategy({
     clientID: process.env.GoogleClientId,
     clientSecret: process.env.GoogleClientSecret,
-    callbackURL: 'http://localhost:3000/auth/google/callback'
+    callbackURL: '/auth/google/callback',
+    proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
 
@@ -33,8 +34,9 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FacebookAPPID,
     clientSecret: process.env.FacebookAPPSECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
-    profileFields: ["id", "email", "name"]
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ["id", "email", "name"],
+    proxy: true
 },
     function (accessToken, refreshToken, profile, done) {
         console.log(profile);
