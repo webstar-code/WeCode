@@ -3,7 +3,7 @@ import { FETCH_USER_REQUEST, FETCH_USER_SUCCESS, FETCH_USER_FAILURE } from '../a
 const isAuthenticated = () => {
     return function(dispatch) {
         dispatch(FETCH_USER_REQUEST());
-        fetch('http://localhost:4000/user')
+        fetch('/api/user')
         .then(res => res.json())
         .then(data => {
             console.log(data);

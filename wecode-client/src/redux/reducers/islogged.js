@@ -1,7 +1,7 @@
 
 const loggedState = {
     loading: false,
-    data: '',
+    data: [],
     error: ''
 }
 

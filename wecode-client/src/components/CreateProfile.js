@@ -10,7 +10,11 @@ import isAuthenticated from '../redux/actions/isAuthenticated'
 const CreateProfile = () => {
     const state = useSelector(state => state.islogged)
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(isAuthenticated());
+    },[]);
     console.log(state);
+
     return (
     
         <div className="flex flex-col bg-gray-900 h-full">

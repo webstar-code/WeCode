@@ -5,12 +5,10 @@ import { ReactComponent as Googleicon} from './icons/google.svg'
 import { ReactComponent as Facebookicon} from './icons/facebook.svg'
 import { Redirect } from 'react-router-dom';
 
-const Home = () => {
-    const [authsuccess, setauthsuccess] = useState(false);
+const SignIn = () => {
 
     return (
         <>
-        {authsuccess ? <Redirect to="/createprofile"></Redirect> : null}
         <div className="flex flex-col bg-gray-900 h-screen">
         <Codeicon className="w-4/5 h-auto mx-auto fill-current text-gray-500"/>
         <div className="font-sans text-6xl mx-auto font-bold -mt-12 text-blue-gray">WeCode</div>
@@ -29,4 +27,4 @@ const Home = () => {
     
     )}
 
-export default Home;
+export default SignIn;
