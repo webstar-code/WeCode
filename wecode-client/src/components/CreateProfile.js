@@ -2,25 +2,17 @@ import React, {useEffect} from 'react';
 import '../index.css'
 import AppBar from './AppBar';
 import { ReactComponent as AddProfileicon } from './icons/account_circle.svg';
-import { useSelector, useDispatch } from 'react-redux';
-import isAuthenticated from '../redux/actions/isAuthenticated'
 
 
 
 const CreateProfile = () => {
-    const state = useSelector(state => state.islogged)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(isAuthenticated());
-    },[]);
-    console.log(state);
 
     return (
-    
+
         <div className="flex flex-col bg-gray-900 h-full">
             <AppBar />
             <div className="container">
-                <div className="text-2xl p-3  text-gray-500" onClick={() => dispatch(isAuthenticated())}>Create Profile</div>
+                <div className="text-2xl p-3  text-gray-500" >Create Profile</div>
                 <AddProfileicon className="w-2/5 h-auto fill-current text-gray-500 mx-auto">
                 </AddProfileicon>
 

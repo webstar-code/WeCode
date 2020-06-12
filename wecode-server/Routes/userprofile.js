@@ -34,23 +34,18 @@ let storage = new GridStorage({
     }
 })
 
-
 let upload = multer({storage});
 
 const UserProfile = require('../Schema/UserProfileSchema');
 
+const authCheck = (req, res, next) => {
 
-// router.get('/userprofile', (req, res) => {
-//     res.send("hello");
-//     // console.log(req.body);
-//     // res.json({file: req.file});
-// })
-
-
-// router.post('/userprofile',upload.single('file'), (req, res) => {
-//     console.log(req.file);
-//     res.json({file: req.file});
-// })
+    if(!req.user) {
+        res.send("Please login");
+    }else{
+        next();
+    }
+}
 
 
 router.post('/userprofile',upload.single('file'), (req, res) => {
@@ -88,9 +83,15 @@ router.post('/userprofile',upload.single('file'), (req, res) => {
     }) 
 })
 
-router.get('/userprofile/:displayname', (req, res) => {
+router.get('/userprofile/:displayname', authCheck, (req, res) => {
     let displayname = req.params.displayname;
+    // console.log(req.user.id);
     UserProfile.findOne({displayname: displayname}, (err, user) => {
+        // if(user) {
+        //     res.json(user);
+        // }else{
+        //     res.json(err);
+        // }
         
         if(user) {
             if(req.user.id == user.UserId){
@@ -99,7 +100,10 @@ router.get('/userprofile/:displayname', (req, res) => {
                     
                 })
             }else{
-                res.json({user: user,profileImg: file ,admin: false});
+                gfs.files.findOne({id: user.ImageRef}, (err, file) => {
+                    res.json({user: user,profileImg: file ,admin: false});
+                        
+                    })
 
             }
         }else{

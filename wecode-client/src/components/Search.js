@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import AppBar from './AppBar';
 import BottomNav from './BottomNav'
 import { ReactComponent as Searchicon} from './icons/search.svg'
 import { ReactComponent as Profileicon} from './icons/account_circle.svg'
-
+import { useDispatch, useSelector } from 'react-redux'
+import getUsers from '../redux/actions/getUsers'
 const Search = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getUsers());
+    }, []);
+
+    const state = useSelector(state => state.users);
+    console.log(state);
+
     return(
         <>
         <AppBar />
@@ -15,7 +25,19 @@ const Search = () => {
             </div>
 
             <div className="">
-                <div className="flex items-center my-3">
+            {state.data ? state.data.map((user) => {return (
+                  <div className="flex items-center my-3">
+                  <Profileicon className="w-16 h-auto"/>
+            <h3 className="font-bold px-3"><Link to={`/profile/${user.displayname}`}>{user.displayname}</Link></h3>
+                  <button className="btn rounded justify-end px-3 bg-blue-500 ml-auto">Follow</button>
+              </div>
+            )}) : state.loading ? <div>Loading</div> 
+                : state.error ?  <div className="text-red-900 text-2xl text-center"> Something went wrong</div>
+                : null
+        }
+
+
+                {/* <div className="flex items-center my-3">
                     <Profileicon className="w-16 h-auto"/>
                     <h3 className="font-bold px-3">Bhavesh choudhary</h3>
                     <button className="btn rounded justify-end px-3 bg-blue-500 ml-auto">Follow</button>
@@ -34,7 +56,7 @@ const Search = () => {
                     <Profileicon className="w-16 h-auto"/>
                     <h3 className="font-bold px-3">webstar.codes</h3>
                     <button className="btn rounded justify-end px-3 bg-blue-500 ml-auto">Follow</button>
-                </div>
+                </div> */}
 
             </div>
         </div>

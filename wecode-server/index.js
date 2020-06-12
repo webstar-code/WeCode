@@ -47,7 +47,7 @@ app.use(passport.session());
 app.use('/', authRoute);
 app.use('/api', userprofileRoute);
 app.use('/api', activityRoute);
-app.use('/api/search', searchRoute);
+app.use('/api', searchRoute);
 
 app.get('/api/user', (req, res) => {
     console.log(req.session);
