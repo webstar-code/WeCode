@@ -15,25 +15,33 @@ const Profile = ({ match }) => {
 
     const state = useSelector(state => state.userprofile);
     console.log(state);
-
-
+        const user = state.data != null ? state.data.user : null;
+        console.log(user);
+        
     return (
 
         <>
-            <div className="container">
-                <div className="grid grid-cols-3 bg-blue-gray-300">
-                    <Profileicon className="w-2/5 h-auto col-span-1"></Profileicon>
-                    <div className="col-span-2">
-                        <h2>webstar.codes</h2>
-                        <h4>Bhvesh choudhary</h4> 
-                    </div>
-                    <div className="col-span-3">
-                        <p className="">I am web developer currently working at Tata consultancy.</p>
-                    </div>
-                </div>
+        {state.data ? 
+         <div className="container">
+         <div className="grid grid-cols-3 bg-blue-gray-300">
+             <Profileicon className="w-2/5 h-auto col-span-1"></Profileicon>
+             <div className="col-span-2">
+        <h2>{user.displayname}</h2>
+        <h4>{user.name}</h4> 
+             </div>
+             <div className="col-span-3">
+        <p className="">{user.about}</p>
+             </div>
+         </div>
 
 
-            </div>
+     </div>
+     : 
+     <div className="text-red-900 text-2xl text-center">
+         Something went wrong
+     </div>
+}
+
 
         </>
 

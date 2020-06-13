@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import '../index.css'
 import AppBar from './AppBar';
 import { ReactComponent as AddProfileicon } from './icons/account_circle.svg';
-
+import { Link } from 'react-router-dom';
 
 
 const CreateProfile = () => {
@@ -36,7 +36,7 @@ const CreateProfile = () => {
                     <label htmlFor="university" className="block  font-bold my-2 text-gray-500">University</label>
                     <input type="text" name="university" className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
 
-                    <button  className="btn bg-green-500 px-6 py-3 hover:bg-green-701 rounded my-6 text-black-500 ">Done</button>
+                    <button  className="btn bg-green-500 px-6 py-3 hover:bg-green-701 rounded my-6 text-black-500 "><Link to="/search">Done</Link></button>
                 </form>
             </div>
         </div>

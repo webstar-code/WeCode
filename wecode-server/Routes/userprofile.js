@@ -39,7 +39,7 @@ let upload = multer({storage});
 const UserProfile = require('../Schema/UserProfileSchema');
 
 const authCheck = (req, res, next) => {
-
+    console.log(req.user);
     if(!req.user) {
         res.send("Please login");
     }else{
