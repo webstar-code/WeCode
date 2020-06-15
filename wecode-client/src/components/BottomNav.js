@@ -14,7 +14,7 @@ const BottomNav = () => {
             <Link to="/"><Homeicon className="w-8 h-auto"/></Link>
             <Link to="/search"><Searchicon className="w-8 h-auto"/></Link>
             <Link to="/post"><Addicon className="w-8 h-auto"/></Link>
-            <Profileicon className="w-8 h-auto"/>
+            <Link to="/profile"><Profileicon className="w-8 h-auto"/></Link>
         </div>
     );
 }

@@ -3,7 +3,7 @@ import { FETCH_USER_REQUEST, FETCH_USER_SUCCESS, FETCH_USER_FAILURE } from '../a
 const getUserProfile = (name) => {
     return function(dispatch) {
         dispatch(FETCH_USER_REQUEST());
-        fetch(`/api/userprofile/assd`)
+        fetch(`/api/userprofile/${name}`)
         .then(res => res.json())
         .then(data => {
             console.log(data);
