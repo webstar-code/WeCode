@@ -4,6 +4,7 @@ const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNew
 });
 
 const UserSchema = new mongoose.Schema({
+    providerid: String,
     name: String,
     email: String
 });

@@ -12,9 +12,10 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
 
-        User.findOne({ name: profile.name }, (err, user) => {
+        User.findOne({ providerid: profile.id }, (err, user) => {
             if (!user) {
                 const user = new User({
+                    providerid: profile.id,
                     name: profile.name.givenName,
                     email: profile.emails[0].value
                 });
@@ -40,9 +41,10 @@ passport.use(new FacebookStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
         console.log(profile);
-        User.find({ name: profile.name }, (err, user) => {
+        User.findOne({ providerid: profile.id }, (err, user) => {
             if (!user) {
                 const user = new User({
+                    providerid: profile.id,
                     name: profile.name.givenName,
                     email: ''
                 });
