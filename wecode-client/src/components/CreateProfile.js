@@ -1,67 +1,141 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css'
 import AppBar from './AppBar';
 import { ReactComponent as AddProfileicon } from './icons/account_circle.svg';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
+import { useDispatch, useSelector } from 'react-redux';
+import isAuthenticated from '../redux/actions/isAuthenticated';
+import { Redirect } from 'react-router-dom';
+
+const FE = gql`
+{
+    account {
+        id
+        name
+    }
+  }
+  
+`;
+
+
+const Get_USERPROFILE = gql`
+    query GET_USERPROFILE ($displayname: String){
+        user (displayname: $displayname) {
+            Userid,
+             name,
+             displayname,
+             about,
+             profession,
+             university
+        }
+    }
+
+
+
+`;
 
 const CREATE_USERPROFILE = gql`
 
-    mutation CREATE_USERPROFILE($Userid: Int!, $displayname: String!, $name: String!, 
-        $about: String, $profession: String, $university: String, $ProfileImage: Upload) {
+    mutation CREATE_USERPROFILE($Userid: String!, $displayname: String!, $name: String!, 
+        $about: String, $profession: String, $university: String) {
             user(Userid: $Userid, displayname: $displayname, name: $name,
-                about: $about, profession: $profession, university: $university, ProfileImg: $ProfileImg) {
+                about: $about, profession: $profession, university: $university) {
         Userid
         displayname,
         name,
         about,
         profession,
         university,
-        ProfileImg
+        ProfileImgref
             }
-
     }
 
 
 `;
 
-
 const CreateProfile = () => {
-    const { handleSubmit, register } = useForm();
-    const [createuser, { data }] = useMutation(CREATE_USERPROFILE);
+    const dispatch = useDispatch();
+    const [Profile_exists, setProfile_exists] = useState(false);
+    const loggedIn = useSelector(state => state.islogged);
+    const displayname = loggedIn.data.name;
+    const { loading , data, error} = useQuery(Get_USERPROFILE, { variables: { displayname } });
+    console.log(data);
 
+
+    const Check_User_Exists = () => {
+        if(data) {
+            // console.log(loggedIn.data._id);
+            // console.log(data.user.Userid);
+            if(loggedIn.data._id === data.user.Userid) {
+                setProfile_exists(true);
+            }
+        }
+       
+    }
+
+
+    useEffect(() => {
+        dispatch(isAuthenticated());
+
+    }, [])
+
+    useEffect(() => {
+        // Check_User_Exists();
+    })
+    console.log(Profile_exists);
+    // useEffect(() => {
+    // }, []);
+
+    const { handleSubmit, register } = useForm();
+
+    const [createuser] = useMutation(CREATE_USERPROFILE);
     const onSubmit = (data) => {
         createuser(
             {
                 variables: {
-                    Userid: 123,
+                    Userid: loggedIn.data._id,
                     displayname: data.displayname,
                     name: data.name,
                     about: data.about,
                     profession: data.profession,
                     education: data.education,
-                    ProfileImg: data.file
                 },
-
-
             })
+        // fetch('api/upload', {
+        //     method: "POST",
+
+        //     body: data.file[0] 
+        // })
+        // .then(() => {
+        //     console.log("Image addded");
+        // })
+
     };
 
-    return (
+    
 
+    return (
+        
         <div className="flex flex-col bg-gray-900 h-full">
+            {Profile_exists ? <p>exss</p> : <p>Nit Exist</p>}
+            {/* {data ? <p>{data.user.Userid}</p> : null} */}
             <AppBar />
             <div className="container">
                 <div className="text-2xl p-3  text-gray-500" >Create Profile</div>
                 <AddProfileicon className="w-2/5 h-auto fill-current text-gray-500 mx-auto">
                 </AddProfileicon>
-
-
-                <form id="form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="w-4/5 flex flex-col mx-auto p-3">
+                <form encType="multipart/form-data" method="POST" action="/api/upload">
                     <label htmlFor="file" className="block font-bold my-2 text-gray-500">ProfileImage</label>
                     <input type="file" name="file" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
+                    <button>Done</button>
+                </form>
+
+                <form id="form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="w-4/5 flex flex-col mx-auto p-3">
+
+
 
                     <label htmlFor="displayname" className="block font-bold my-2 text-gray-500">Displayname</label>
                     <input type="text" name="displayname" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>

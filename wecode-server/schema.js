@@ -1,25 +1,34 @@
 const { GraphQLObjectType, GraphQLString, GraphQLInt, 
-    GraphQLList, GraphQLSchema, GraphQLNonNull, 
+    GraphQLList, GraphQLSchema, GraphQLNonNull,
+    Grap 
     } = require('graphql');
 const { GraphQLUpload } = require('graphql-upload');
+ 
 const mongoose = require('mongoose');
 const User = require('./Schema/UserSchema');
 const UserProfile = require('./Schema/UserProfileSchema');
 const Post = require('./Schema/PostSchema');
+const Img = require('./Schema/ImgSchema');
+
 const Question = require('./Schema/QuestionSchema');
+const { createWriteStream } = require('fs');
+const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+});
+
 
 const UsersType = new GraphQLObjectType({
     name: "UsersType",
     description: "This is users query",
+    
     fields: () => ({
-        Userid: { type: GraphQLInt },
+            
+        Userid: { type: GraphQLString },
         displayname: { type: GraphQLString },
         name: { type: GraphQLString },
         about: { type: GraphQLString },
         profession: { type: GraphQLString },
         university: { type: GraphQLString },
-        ProfileImage: { type: GraphQLUpload },
-        
+        ProfileImgref: {type: GraphQLString}
     })
 })
 
@@ -57,6 +66,14 @@ const AccountType = new GraphQLObjectType({
     })
 })
 
+const ImageType = new GraphQLObjectType({
+    name: "ImageType",
+    description: "images",
+    fields: () => ({
+        Userid:  {type: GraphQLString},
+        ProfileImgref:  {type: GraphQLString}
+    })
+})
 
 const RootQueryType = new GraphQLObjectType({
     name: "RootQueryType",
@@ -112,11 +129,22 @@ const RootQueryType = new GraphQLObjectType({
             resolve: (parent, args) => {
                 return Question.findOne({ displayname: args.displayname }).exec();
             }
+        },
+        image: {
+            type: ImageType,
+            description: "get images",
+            resolve: () => Img.find().exec()
         }
 
     }
 });
-
+const storeUpload = ({stream, filename}) => {
+    new Promise((resolve, reject) => {
+        stream.pipe(createWriteStream(filename))
+        .on("finish", () => resolve())
+        .on("error" ,reject)
+    });
+}
 const MutationQueryType = new GraphQLObjectType({
     name: "mutation",
     description: "This is MutationQueryType",
@@ -125,21 +153,16 @@ const MutationQueryType = new GraphQLObjectType({
             type: UsersType,
             description: "create a user",
             args: {
-                Userid: { type: GraphQLNonNull(GraphQLInt) },
+                
+                Userid: { type: GraphQLNonNull(GraphQLString) },
                 displayname: { type: GraphQLNonNull(GraphQLString) },
                 name: { type: GraphQLNonNull(GraphQLString) },
                 about: { type: GraphQLString },
                 profession: { type: GraphQLString },
                 university: { type: GraphQLString },
-                ProfileImage: {
-                    type: GraphQLUpload
-                 }
+
             },
-            resolve: (parent, args) => {
-                // const { ProfileImage, ...data } = args;
-                // const { filename, mimetype, createReadStream} = await ProfileImage;
-                // const stream = createReadStream();
-                // stream.on
+            resolve: async (parent, args) => {
                 const user = new UserProfile(args);
                 return user.save();
             }

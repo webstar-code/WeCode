@@ -53,13 +53,13 @@ app.use('/graphql', graphqlHTTP({
 }))
 
 app.use('/', authRoute);
-// app.use('/api', userprofileRoute);
+app.use('/api', userprofileRoute);
 // app.use('/api', activityRoute);
 // app.use('/api', searchRoute);
 
 app.get('/api/user', (req, res) => {
-    console.log(req.session);
-    console.log(req.user);
+    // console.log(req.session);
+    // console.log(req.user);
     res.json(req.user);
 })
 
