@@ -1,30 +1,29 @@
 import React from 'react';
-import AppBar from './AppBar';
-import BottomNav from './BottomNav';
-import { ReactComponent as AddImageicon } from './icons/photo.svg';
-import { ReactComponent as Profileicon} from './icons/account_circle.svg'
+import { ReactComponent as Profileicon } from './icons/account_circle.svg'
 
 const Post = () => {
-    return(
-        <>
-        <AppBar />
-        <div className="">
-            <div className="flex justify-between shadow p-2">
-                <h3>New Post</h3>
-                <h3 className="text-blue-500">Share</h3>
+    return (
+        <div className="w-full flex-col">
+            <div className="flex text-sm font-bold p-2">
+                <Profileicon className="w-12 px-1" />
+                            webstar
+                            </div>
+            <div className="h-64 bg-black"></div>
+            <div className="flex justify-around border-b-2 py-2">
+                <div className="">like </div>
+                <div className="like">comment </div>
+                <div className="like">share </div>
             </div>
-
-            <AddImageicon className="w-2/5 h-auto mx-auto my-6"></AddImageicon> 
-            <div className="flex p-2">
-                <Profileicon className="w-16 h-auto"/>
-            <input name="caption" placeholder="Write a caption..." className=" w-4/5 border-b-2 outline-none pl-2 text-xl break-words over break-all"></input>
+            <div className="flex py-2">
+                <span className="font-bold pr-2">webstar</span>
+                <p>this is my first post and awesome post.</p>
             </div>
-
+            <div className="py-4 text-gray-500 text-sm">
+                <span className="text-sm">2 July 2020</span>
+            </div>
 
         </div>
 
-        <BottomNav />
-        </>
     )
 }
 

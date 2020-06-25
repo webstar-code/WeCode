@@ -23,7 +23,6 @@ const Search = () => {
     return(
 
         <>
-        <AppBar />
         
         <div className="container px-3">
             <div className="flex rounded border border-black p-2 my-2">
@@ -47,7 +46,6 @@ const Search = () => {
 
             </div>
         </div>
-        <BottomNav />
         </>
     )
 }

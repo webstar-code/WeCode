@@ -61,19 +61,18 @@ const CreateProfile = () => {
     const [Profile_exists, setProfile_exists] = useState(false);
     const loggedIn = useSelector(state => state.islogged);
     const displayname = loggedIn.data.name;
-    const { loading , data, error} = useQuery(Get_USERPROFILE, { variables: { displayname } });
-    console.log(data);
+    const { loading, data, error } = useQuery(Get_USERPROFILE, { variables: { displayname } });
+    // console.log(loggedIn.data._id);
+    // console.log(data);
 
 
     const Check_User_Exists = () => {
-        if(data) {
-            // console.log(loggedIn.data._id);
-            // console.log(data.user.Userid);
-            if(loggedIn.data._id === data.user.Userid) {
+        if (data && loggedIn && data.user) {
+            if (loggedIn.data._id === data.user.Userid) {
                 setProfile_exists(true);
             }
         }
-       
+
     }
 
 
@@ -83,11 +82,9 @@ const CreateProfile = () => {
     }, [])
 
     useEffect(() => {
-        // Check_User_Exists();
+        Check_User_Exists();
     })
-    console.log(Profile_exists);
-    // useEffect(() => {
-    // }, []);
+
 
     const { handleSubmit, register } = useForm();
 
@@ -115,13 +112,12 @@ const CreateProfile = () => {
 
     };
 
-    
+
 
     return (
-        
+
         <div className="flex flex-col bg-gray-900 h-full">
-            {Profile_exists ? <p>exss</p> : <p>Nit Exist</p>}
-            {/* {data ? <p>{data.user.Userid}</p> : null} */}
+            {Profile_exists ? <Redirect to="/search"></Redirect> : null}
             <AppBar />
             <div className="container">
                 <div className="text-2xl p-3  text-gray-500" >Create Profile</div>
