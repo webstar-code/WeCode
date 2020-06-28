@@ -7,6 +7,8 @@ const cors = require('cors');
 const bodyparser = require('body-parser');
 require('dotenv').config();
 
+const graphqlHTTP = require('express-graphql');
+const schema = require('./schema');
 const passportSetup = require('./Auth/passport-setup');
 const authRoute = require('./Routes/authRoute');
 const userprofileRoute = require('./Routes/userprofile');
@@ -28,8 +30,9 @@ const sessionStore = new MongoStore({ mongooseConnection: connection, collection
 app.use(session({
     secret: 'scret',
     resave: false,
-    saveUninitialized: true,
-    store: sessionStore
+    store: sessionStore,
+    cookie: {maxAge: 24 * 60 *60 * 1000}
+    
 }));
 
 passport.serializeUser((user, done) => {
@@ -44,14 +47,19 @@ passport.deserializeUser((id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: true
+}))
+
 app.use('/', authRoute);
 app.use('/api', userprofileRoute);
-app.use('/api', activityRoute);
-app.use('/api', searchRoute);
+// app.use('/api', activityRoute);
+// app.use('/api', searchRoute);
 
 app.get('/api/user', (req, res) => {
-    console.log(req.session);
-    console.log(req.user);
+    // console.log(req.session);
+    // console.log(req.user);
     res.json(req.user);
 })
 

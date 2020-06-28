@@ -1,13 +1,14 @@
+
 const mongoose = require('mongoose');
 const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log("connected to DB");
 });
 
-const UserSchema = new mongoose.Schema({
-    providerid: String,
-    name: String,
-    email: String
+const uploadSchema = new mongoose.Schema({
+    Userid: String,
+    ProfileImgref: String
 });
 
-const User = connection.model('GoogleUser', UserSchema);
-module.exports = User;
+const Img = connection.model('images', uploadSchema);
+
+module.exports = Img;

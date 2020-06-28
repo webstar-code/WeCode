@@ -1,4 +1,5 @@
 const passport = require('passport');
+const User = require('../../Schema/UserSchema');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const app = require('express')();
 
@@ -12,9 +13,12 @@ passport.use(new FacebookStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
        console.log(profile);
-        User.find({ name: profile.name }, (err, user) => {
+    
+        User.findOne({providerid: profile.id }, (err, user) => {
             if (!user) {
+                console.log("new User");
                 const user = new User({
+                    providerid: profile.id,
                     name: profile.name.givenName,
                     email: ''
                 });
@@ -24,20 +28,14 @@ passport.use(new FacebookStrategy({
                     })
             }
             else {
+                console.log("already exists");
+
                 return done(null, user);
             }
         })
     }))
     
 }
-
-
-
-// app.get('/auth/facebook', 
-// passport.authenticate('facebook'));
-// app.get('auth/facebook/callback',
-// passport.authenticate('facebook', {successRedirect: '/user', failureRedirect: '/login'}));
-
 
 
 module.exports = facebookstrategy;
