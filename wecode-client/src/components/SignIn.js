@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import '../index.css'
-import { ReactComponent as Codeicon} from './icons/code-24px.svg'
-import { ReactComponent as Googleicon} from './icons/google.svg'
-import { ReactComponent as Facebookicon} from './icons/facebook.svg'
+import { ReactComponent as Codeicon} from './icons/brandcicons/code-24px.svg'
+import { ReactComponent as Googleicon} from './icons/brandcicons/google.svg'
+import { ReactComponent as Facebookicon} from './icons/brandcicons/facebook.svg'
 import { Redirect } from 'react-router-dom';
 
 const SignIn = () => {

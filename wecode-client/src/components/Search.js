@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import AppBar from './AppBar';
 import BottomNav from './BottomNav'
-import { ReactComponent as Searchicon} from './icons/search.svg'
-import { ReactComponent as Profileicon} from './icons/account_circle.svg'
+import { ReactComponent as Searchicon} from './icons/Navicons/search.svg'
+import { ReactComponent as Profileicon} from './icons/utilitiesicon/account_circle.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import getUsers from '../redux/actions/getUsers'
 import gql from 'graphql-tag';

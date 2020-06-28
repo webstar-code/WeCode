@@ -1,17 +1,15 @@
-import React, { useEffect} from 'react'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { animated, useSpring } from 'react-spring';
+import { ReactComponent as Profileicon } from './icons/Navicons/account_circle.svg';
 // import { ReactComponent as Homeicon} from './icons/home.svg'
-import { ReactComponent as Homeicon} from './icons/browser.svg'
+import { ReactComponent as Homeicon } from './icons/Navicons/browser.svg';
+import { ReactComponent as Addicon } from './icons//Navicons/icons8-plus.svg';
+import { ReactComponent as Messageicon } from './icons/Navicons/message.svg';
+import { ReactComponent as Searchicon } from './icons/Navicons/search.svg';
 
-import { ReactComponent as Searchicon} from './icons/search.svg'
-import { ReactComponent as Addicon} from './icons/icons8-plus.svg'
-import { ReactComponent as Messageicon } from './icons/message.svg'
-import { ReactComponent as Profileicon} from './icons/account_circle.svg'
-import { useDispatch, useSelector } from 'react-redux'
-import isAuthenticated from '../redux/actions/isAuthenticated'
 
-import { useSpring, animated } from 'react-spring';
-import { useState } from 'react';
 
 
 
@@ -60,7 +58,7 @@ const BottomNav = () => {
     return(
         
         <div className="flex align-center w-screen justify-around bottom-0 fixed p-2 .rounded-t-sm shadow bg-white">
-            <Link to="/"><Homeicon className={`w-8 h-auto text-blue ${home ? "fill-current" : null}`} onClick={() => activeicon('home')}/></Link>
+            <Link to="/feed"><Homeicon className={`w-8 h-auto text-blue ${home ? "fill-current" : null}`} onClick={() => activeicon('home')}/></Link>
             <Link to="/search"><Searchicon onClick={() => activeicon()} className={`${search ? "text-blue-200" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
             
             <div className="flex relative justify-center w-8">

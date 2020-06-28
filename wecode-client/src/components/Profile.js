@@ -4,9 +4,9 @@ import BottomNav from './BottomNav'
 import Post from './Post';
 import Question from './Question'
 
-import { ReactComponent as Profileicon } from './icons/account_circle.svg'
-import { ReactComponent as DownArrow } from './icons/downarrow.svg'
-import { ReactComponent as UpArrow } from './icons/uparrow.svg'
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
+import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg'
+import { ReactComponent as UpArrow } from './icons/utilitiesicon/uparrow.svg'
 
 import { useDispatch, useSelector } from 'react-redux'
 import isAuthenticated from '../redux/actions/isAuthenticated'
@@ -156,6 +156,9 @@ const Profile = ({ match }) => {
 
                     :
                     <div className="">
+                        {/* search through questions array and search for questions with Qid === admin.id */}
+                        {/* map through array of questions and give each question a QID prop */}
+
                     <Question />
                     <Question />
                     <Question />
