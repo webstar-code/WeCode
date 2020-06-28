@@ -3,6 +3,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+.min-w-half {
+    min-width: 50%;
+}
+
+
 .bg-gradient-pinkblue {
     background: #3494E6;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to right, #EC6EAD, #3494E6);  /* Chrome 10-25, Safari 5.1-6 */

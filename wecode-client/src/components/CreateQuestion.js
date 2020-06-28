@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import AppBar from './AppBar';
 import BottomNav from './BottomNav';
-import { ReactComponent as Profileicon } from './icons/account_circle.svg'
-import { ReactComponent as Backicon } from './icons/back.svg'
-import { ReactComponent as Downicon } from './icons/down-arrow.svg'
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
+import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg'
+import { ReactComponent as Downicon } from './icons/utilitiesicon/down-arrow.svg'
 
 import { useHistory } from 'react-router-dom';
 

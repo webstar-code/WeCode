@@ -17972,7 +17972,8 @@ video {
   transition-delay: 1000ms;
 }
 
-.foo {
+.min-w-half {
+  min-width: 50%;
 }
 
 .bg-gradient-pinkblue {

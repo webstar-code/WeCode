@@ -1,5 +1,6 @@
 import React from 'react';
-import { ReactComponent as Profileicon } from './icons/account_circle.svg'
+import { Link } from 'react-router-dom';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
 
 const Post = () => {
     return (
@@ -11,7 +12,7 @@ const Post = () => {
             <div className="h-64 bg-black"></div>
             <div className="flex justify-around border-b-2 py-2">
                 <div className="">like </div>
-                <div className="like">comment </div>
+                <Link to="/discussion"><div className="">comment </div></Link>
                 <div className="like">share </div>
             </div>
             <div className="flex py-2">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css'
 import AppBar from './AppBar';
-import { ReactComponent as AddProfileicon } from './icons/account_circle.svg';
+import { ReactComponent as AddProfileicon } from './icons/utilitiesicon/account_circle.svg';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
