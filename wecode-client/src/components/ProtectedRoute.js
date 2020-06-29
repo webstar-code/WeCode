@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import isAuthenticated from '../redux/actions/isAuthenticated'
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import isAuthenticated from '../redux/actions/isAuthenticated';
 
 const ProtectedRoute = (props) => {
     const Component = props.component;

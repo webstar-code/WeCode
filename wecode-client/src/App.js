@@ -45,16 +45,6 @@ function App() {
               <CreateProfile />
             </Route>
 
-            <Route exact path="/" component={Home}></Route>
-
-            <Route path="/search">
-              {/* <ProtectedRoute  component={Search} /> */}
-              <AppBar />
-              <Search />
-              <BottomNav />
-
-            </Route>
-
             <Route path="/createpost">
               <CreatePost />
             </Route>
@@ -62,14 +52,29 @@ function App() {
             <Route path="/createquestion">
               <CreateQuestion />
             </Route>
-            <Route path="/profile/:name" component={Profile}>
-              {/* <Profile /> */}
-            </Route>
 
-
-            <Route path="/discussion" component={Discussion} />
             <Route path="/createcomment" component={CreateComment} />
 
+            <Route path="/discussion" component={Discussion} />
+            
+            <div>
+            
+            <AppBar />
+
+            <Route exact path="/" component={Home}></Route>
+
+            <Route path="/search">
+              {/* <ProtectedRoute  component={Search} /> */}
+              <Search />
+            </Route>
+
+            <Route path="/profile/:name" component={Profile}>
+            </Route>
+
+            <BottomNav />
+            </div>
+
+     
           </Switch>
         </Router>
 

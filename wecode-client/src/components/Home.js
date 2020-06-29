@@ -8,8 +8,7 @@ import Question from './Question'
 
 const Home = () => {
     return(
-        <div className="">
-            <AppBar />
+        <div className="mb-16">
 
             <div className="">
                 <Post />
@@ -19,7 +18,6 @@ const Home = () => {
 
             </div>
 
-            <BottomNav />
         </div>
 
 

@@ -1,17 +1,15 @@
-import React from 'react';
-import AppBar from './AppBar';
-import BottomNav from './BottomNav';
-import { ReactComponent as AddImageicon } from './icons/utilitiesicon/photo.svg';
-import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
-import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg'
-
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
+import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
+import { ReactComponent as AddImageicon } from './icons/utilitiesicon/photo.svg';
+
 
 
 const CreatePost = () => {
     const [template, settemplate] = useState(false);
     const [bgcolor, setbgcolor] = useState('bg-white');
+    const [textlength, settextlength] = useState(0);
     const history = useHistory();
 
     const Goback = () => {
@@ -26,7 +24,9 @@ const CreatePost = () => {
             settemplate(false);
         }
     }
-
+    const handleTextlength = (e) => {
+        settextlength(e.currentTarget.value.length);
+    }
 
     return (
         <>
@@ -37,17 +37,19 @@ const CreatePost = () => {
                     <h3 className="font-bold text-xl">New Post</h3>
                 </div>
 
-                <div className=" flex-col h-full">
-                    <div className="flex p-3">
+                <div className=" flex-col px-3 h-full">
+                    <div className="flex  py-1">
                         <Profileicon className="w-16 h-auto " />
-                        <p className="py-3">Webstar</p>
+                        <p className="pt-4 pl-2">Webstar</p>
                     </div>
 
-                    <div id="bgstyle" className={` flex align-center justify-center ${bgcolor} p-3 text-2xl `}>
-                        <textarea rows="7" className={`overflow-auto w-11/12 border-none outline-none text-xl bg-transparent 
-                        ${template ? "text-center self-center font-bold" : null} 
+                    <div id="bgstyle" className={` flex-col ${bgcolor} px-2 text-2xl `}>
+                        <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
+
+                        <textarea maxLength="512" rows="10" className={`w-full overflow-y-hidden border-none outline-none text-xl bg-transparent 
+                        ${template ? "text-center self-center font-bold" : null}    
                         ${(bgcolor == "bg-blue-gray" || bgcolor === "bg-gradient-dblue" || bgcolor === "bg-gradient-pinkblue") ? "text-white" : null}
-                        `} placeholder="Share coding tips, articles, snippets and anything code related"></textarea>
+                        `} placeholder="Share coding tips, articles, snippets and anything code related" onChange={(e) => handleTextlength(e)}  ></textarea>
                     </div>
 
                 </div>

@@ -19,7 +19,7 @@ const Discussion = () => {
             </div>
 
 
-            <Question />
+            <Question Render={'long'}/>
             <div className="px-4 py-2 bg-gray-300 text-gray-700">Comments</div>
             <div className="Comments">
                 <Comments />

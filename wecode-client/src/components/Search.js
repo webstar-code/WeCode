@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom';
-import AppBar from './AppBar';
-import BottomNav from './BottomNav'
-import { ReactComponent as Searchicon} from './icons/Navicons/search.svg'
-import { ReactComponent as Profileicon} from './icons/utilitiesicon/account_circle.svg'
-import { useDispatch, useSelector } from 'react-redux'
-import getUsers from '../redux/actions/getUsers'
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ReactComponent as Searchicon } from './icons/Navicons/search.svg';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 
 const GETUSERS = gql`
     {
@@ -24,7 +20,7 @@ const Search = () => {
 
         <>
         
-        <div className="container px-3">
+        <div className="container px-3 mb-16">
             <div className="flex rounded border border-black p-2 my-2">
             <Searchicon className="w-6 h-auto"/>
             <input type="text" name="search" placeholder="Search" className=" w-4/5 border-b-2 outline-none pl-2 text-md"></input>

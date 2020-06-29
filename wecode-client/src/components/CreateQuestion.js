@@ -1,18 +1,17 @@
-import React, { useState, useRef } from 'react';
-import AppBar from './AppBar';
-import BottomNav from './BottomNav';
-import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
-import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg'
-import { ReactComponent as Downicon } from './icons/utilitiesicon/down-arrow.svg'
-
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { animated, useSpring } from 'react-spring';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
+import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
+import { ReactComponent as Downicon } from './icons/utilitiesicon/down-arrow.svg';
 
-import { useSpring, animated } from 'react-spring';
+
 
 const CreateQuestion = () => {
     const [tags, settags] = useState(false);
     const [taginput, settaginput] = useState(null);
     const [Tag_placehoder, setTag_placehoder] = useState(true);
+    const [textlength, settextlength] = useState(0);
     const history = useHistory();
 
     const Goback = () => {
@@ -55,6 +54,12 @@ const CreateQuestion = () => {
         transform: tags ? 'rotate(180deg)' : 'rotate(0deg)'
     })
 
+    const handleTextlength = (e) => {
+        const scrollheight = e.currentTarget.scrollHeight;
+        e.currentTarget.style.height = scrollheight + "px";
+        settextlength(e.currentTarget.value.length);
+    }
+
     const AnimatedDownicon = animated(Downicon);
 
     return (
@@ -64,7 +69,7 @@ const CreateQuestion = () => {
                 <div className="flex shadow px-2 py-3 bg-blue-gray text-white">
                     <Backicon className="w-16 h-auto px-4  stroke-current fill-current text-white" onClick={() => Goback()} />
 
-                    <h3 className="font-bold text-xl">New Question</h3>
+                    <h3 className="font-semibold text-xl">New Question</h3>
                 </div>
 
                 <div className=" flex-col p-3 shadow m-3">
@@ -73,16 +78,21 @@ const CreateQuestion = () => {
                         <p className="py-3">Webstar</p>
                     </div>
 
-                    <input name="question" placeholder="Question" className=" w-11/12 border-b border-black  outline-none pl-2 p-2 mb-6 break-words"></input>
-                    <input name="description" placeholder="Description" className=" w-11/12 border-b border-black  outline-none pl-2  p-2 mb-6 break-words"></input>
-                    {/* <input name="tags" placeholder="Relevant tags" className=" w-11/12 border-b border-black  outline-none pl-2 p-2 mb-6 break-words"></input> */}
+                    <input name="question" placeholder="Question" className="font-medium w-11/12 border-b border-black  outline-none pl-2 p-2 mb-6"></input>
+
+                    <div className={`flex-col w-11/12 border-b border-black outline-none pl-2 p-2 mb-6 `}>
+                        <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
+                        <textarea maxLength="512" className={`w-full outline-none`}
+                            placeholder="Description" onChange={(e) => handleTextlength(e)}  ></textarea>
+                    </div>
+
 
                     <div className="flex justify-between w-11/12 border-b border-black pl-2 p-2 " onClick={() => showTags()}>
                         <div id="tags" className="flex flex-wrap">
-                        {Tag_placehoder ? <p className="text-gray-500">Relevant tags</p> : null}                        
+                            {Tag_placehoder ? <p className="text-gray-500">Relevant tags</p> : null}
                         </div>
 
-                        <AnimatedDownicon className="w-4" style={downpropsicon}/>
+                        <AnimatedDownicon className="w-4" style={downpropsicon} />
                     </div>
 
                     {tags ?

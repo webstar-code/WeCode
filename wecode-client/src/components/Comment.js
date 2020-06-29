@@ -1,13 +1,7 @@
-import React from 'react';
-import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg'
-import Question from './Question';
-import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
-import Reply from './Reply'
-import Discussion from './Discussion';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState } from 'react';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
+import Reply from './Reply';
 const Comments = () => {
-    const [stopml, setstopml] = useState(false);
 
 
 

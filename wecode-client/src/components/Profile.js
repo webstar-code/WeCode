@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import AppBar from './AppBar'
-import BottomNav from './BottomNav'
-import Post from './Post';
-import Question from './Question'
-
-import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
-import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg'
-import { ReactComponent as UpArrow } from './icons/utilitiesicon/uparrow.svg'
-
-import { useDispatch, useSelector } from 'react-redux'
-import isAuthenticated from '../redux/actions/isAuthenticated'
-
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { animated, useSpring } from 'react-spring';
+import isAuthenticated from '../redux/actions/isAuthenticated';
+import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
+import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg';
+import { ReactComponent as Editicon } from './icons/utilitiesicon/edit.svg';
+import { ReactComponent as UpArrow } from './icons/utilitiesicon/uparrow.svg';
+import Post from './Post';
+import Question from './Question';
 
-import { useSpring, animated } from 'react-spring';
+
+
+
 const Get_USERPROFILE = gql`
     query GET_USERPROFILE ($displayname: String){
         user (displayname: $displayname) {
@@ -102,16 +101,27 @@ const Profile = ({ match }) => {
                 : <p>loading.....</p>}
  */}
 
-            <div className="container">
-                <div className="grid grid-cols-3 bg-blue-gray-300 mt-6">
-                    <Profileicon className="w-3/5 h-auto col-span-1 ml-6"></Profileicon>
-                    <div className="col-span-2 self-center">
-                        <h2 className="text-2xl font-bond m-0 p-0">webstar</h2>
-                        <h4>Bhavesh choudhary</h4>
+            <div className="container mb-16">
+                <div className="grid grid-cols-3 bg-blue-gray-300 mt-3">
+                    <Profileicon className="w-3/5 h-auto col-span-1 ml-3"></Profileicon>
+                    <div className="flex col-span-2 self-center justify-between -ml-8">
+                        <div className="flex-col">
+                            <h2 className="text-2xl font-semibold m-0 p-0">webstar</h2>
+                            <h4 className="text-xl font-light" >Bhavesh choudhary</h4>
+                        </div>
+
                         {/* {data.user.Userid === loggedIn.data._id ? <button className="btn ">Edit Profile</button> : null} */}
+
+                        <button className="flex items-center border border-black rounded px-2 text-sm mt-2 mr-2 h-8">
+                            <Editicon className="w-6 h-auto px-1" />
+                            Edit Profile</button>
+
                     </div>
-                    <div className="col-span-3 mx-auto pt-3">
-                        <p className="text-xl">I am web developer</p>
+
+                   
+
+                    <div className="col-span-3 mx-auto">
+                        <p className="">I am web developer</p>
                     </div>
                     <div className="col-span-3 flex flex-col mx-12 my-3">
 
@@ -127,30 +137,34 @@ const Profile = ({ match }) => {
                         </animated.div>
 
                         {show ?
-                                <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
-                                    <UpArrow className="w-3 mx-1" />show less...
+                            <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
+                                <UpArrow className="w-3 mx-1" />show less...
                                     </div>
-                                : <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
-                                    <DownArrow className="w-3 mx-1" />show More...</div>}
+                            : <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
+                                <DownArrow className="w-3 mx-1" />show More...</div>}
 
 
                     </div>
+                        
+                    <div className="text-sm col-span-1 text-center font-medium">32 Posts</div>
+                    <div className="text-sm col-span-1 text-center font-medium">112 Following</div>
+                    <div className="text-sm col-span-1 text-center font-medium">45 Followers</div>
                 </div>
 
-                <div className="flex justify-center  border-t-2 border-b-2">
+                <div className="flex justify-center  border-t-2 border-b-2 mt-2">
                     <div className={`w-3/6 text-center py-3 ${postview ? "border-b-2 border-blue-900" : ""}`} onClick={() => showPost()}>Post</div>
-                    <div className={`w-3/6 text-center py-3 ${!postview ? "border-b-2 border-blue-900" : "" }`} onClick={() => hidePost()}>Questions</div>
-                </div> 
-                
-               
-                
+                    <div className={`w-3/6 text-center py-3 ${!postview ? "border-b-2 border-blue-900" : ""}`} onClick={() => hidePost()}>Questions</div>
+                </div>
+
+
+
                 {postview ?
                     <div className="container">
-                    <>
-                        <Post />
-                        <Post />
-                        <Post />
-                    </>
+                        <>
+                            <Post />
+                            <Post />
+                            <Post />
+                        </>
 
                     </div>
 
@@ -159,15 +173,14 @@ const Profile = ({ match }) => {
                         {/* search through questions array and search for questions with Qid === admin.id */}
                         {/* map through array of questions and give each question a QID prop */}
 
-                    <Question />
-                    <Question />
-                    <Question />
+                        <Question />
+                        <Question />
+                        <Question />
 
                     </div>
                 }
 
             </div>
-            <BottomNav />
         </>
 
     )
