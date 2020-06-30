@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
+import { Link } from 'react-router-dom';
 import isAuthenticated from '../redux/actions/isAuthenticated';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg';
@@ -112,9 +113,9 @@ const Profile = ({ match }) => {
 
                         {/* {data.user.Userid === loggedIn.data._id ? <button className="btn ">Edit Profile</button> : null} */}
 
-                        <button className="flex items-center border border-black rounded px-2 text-sm mt-2 mr-2 h-8">
-                            <Editicon className="w-6 h-auto px-1" />
-                            Edit Profile</button>
+                        <Link to="/editprofile" className="flex items-center border border-black rounded px-2 text-sm mt-2 mr-2 h-8">
+                        <Editicon className="w-6 h-auto px-1" />
+                            Edit Profile</Link>
 
                     </div>
 

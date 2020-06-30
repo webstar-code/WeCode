@@ -11,7 +11,7 @@ const BackIcon = () => {
 
 
     return(
-<Backicon className="w-8 h-auto mx-4 stroke-current fill-current text-white" onClick={() => Goback()} />
+<Backicon className="w-8 h-auto mx-2 stroke-current fill-current text-white" onClick={() => Goback()} />
 
     )
 }

@@ -57,7 +57,8 @@ const CREATE_USERPROFILE = gql`
 
 `;
 
-const CreateProfile = () => {
+const CreateProfile = (props) => {
+    const User = props.User;
     const dispatch = useDispatch();
     const [Profile_exists, setProfile_exists] = useState(false);
     const loggedIn = useSelector(state => state.islogged);
@@ -135,7 +136,7 @@ const CreateProfile = () => {
 
 
                     <label htmlFor="displayname" className="block font-bold my-2 text-gray-500">Displayname</label>
-                    <input type="text" name="displayname" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
+                    <input type="text" name="displayname" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" placeholder={`${User ? User : null}`}></input>
                     <label htmlFor="name" className="block  font-bold my-2 text-gray-500">Name</label>
                     <input type="text" name="name" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
                     <label htmlFor="about" className="block  font-bold my-2 text-gray-500">About</label>

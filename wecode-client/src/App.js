@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Link, Switch, Route, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Switch, Route, useLocation } from 'react-router-dom';
 import SignIn from './components/SignIn'
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -15,12 +15,14 @@ import CreateQuestion from './components/CreateQuestion';
 import Profile from './components/Profile';
 import Discussion from './components/Discussion';
 import CreateComment from './components/CreateComment';
+import EditProfile from './components/EditProfile';
 
 
 import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 import { createUploadLink } from 'apollo-upload-client';
 import Home from './components/Home';
+import { AnimatePresence } from 'framer-motion'
 const link = createUploadLink({
   uri: 'http://localhost:4000/graphql'
 })
@@ -31,19 +33,25 @@ const client = new ApolloClient({
 })
 
 function App() {
+  const location = useLocation();
   return (
     <ApolloProvider client={client}>
       <div className="App">
 
-        <Router>
+        {/* <AnimatePresence> */}
           <Switch>
             <Route exact path="/signin">
               <SignIn />
             </Route>
 
             <Route path="/createprofile">
-              <CreateProfile />
+              <CreateProfile User={'webstar'} />
             </Route>
+
+            <Route path="/editprofile">
+              <EditProfile />
+            </Route>
+
 
             <Route path="/createpost">
               <CreatePost />
@@ -56,27 +64,29 @@ function App() {
             <Route path="/createcomment" component={CreateComment} />
 
             <Route path="/discussion" component={Discussion} />
-            
+
             <div>
-            
-            <AppBar />
 
-            <Route exact path="/" component={Home}></Route>
+              <AppBar />
 
-            <Route path="/search">
-              {/* <ProtectedRoute  component={Search} /> */}
-              <Search />
-            </Route>
+              <Route exact path="/" >
+                <Home />
+              </Route>
 
-            <Route path="/profile/:name" component={Profile}>
-            </Route>
+              <Route path="/search">
+                {/* <ProtectedRoute  component={Search} /> */}
+                <Search />
+              </Route>
 
-            <BottomNav />
+              <Route path="/profile/:name" component={Profile}>
+              </Route>
+
+              <BottomNav />
             </div>
 
-     
+
           </Switch>
-        </Router>
+        {/* </AnimatePresence> */}
 
       </div>
     </ApolloProvider>
