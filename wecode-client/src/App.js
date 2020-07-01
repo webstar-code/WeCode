@@ -23,6 +23,10 @@ import ApolloClient from 'apollo-boost';
 import { createUploadLink } from 'apollo-upload-client';
 import Home from './components/Home';
 import { AnimatePresence } from 'framer-motion'
+import Followers from './components/Followers'
+import People from './components/People';
+import PostComment from './components/PostComments';
+
 const link = createUploadLink({
   uri: 'http://localhost:4000/graphql'
 })
@@ -60,10 +64,14 @@ function App() {
             <Route path="/createquestion">
               <CreateQuestion />
             </Route>
-
+            <Route path="/people">
+              <People />
+            </Route>
+            
             <Route path="/createcomment" component={CreateComment} />
 
-            <Route path="/discussion" component={Discussion} />
+            <Route path="/discussion/:questionid" component={Discussion} />
+            <Route path="/comments/:postid" component={PostComment} />
 
             <div>
 

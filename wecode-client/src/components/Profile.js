@@ -148,8 +148,8 @@ const Profile = ({ match }) => {
                     </div>
                         
                     <div className="text-sm col-span-1 text-center font-medium">32 Posts</div>
-                    <div className="text-sm col-span-1 text-center font-medium">112 Following</div>
-                    <div className="text-sm col-span-1 text-center font-medium">45 Followers</div>
+                    <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">112 Following</Link></div>
+                    <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">45 Followers</Link></div>
                 </div>
 
                 <div className="flex justify-center  border-t-2 border-b-2 mt-2">

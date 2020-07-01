@@ -12,7 +12,7 @@ const Post = () => {
             <div className="h-64 bg-black"></div>
             <div className="flex justify-around border-b-2 py-2">
                 <div className="">like </div>
-                <Link to="/discussion"><div className="">comment </div></Link>
+                <Link to="/comments/12345"><div className="">comment </div></Link>
                 <div className="like">share </div>
             </div>
             <div className="flex py-2">

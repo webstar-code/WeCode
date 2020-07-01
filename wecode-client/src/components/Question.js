@@ -81,7 +81,7 @@ const Question = (props) => {
 
                     <div className="flex justify-around py-2">
                         <div className="">stars{question.stars}</div>
-                        <Link to="/discussion"><div className="like">discuss</div></Link>
+                        <Link to="/discussion/56789"><div className="like">discuss</div></Link>
                     </div>
 
                 </div>

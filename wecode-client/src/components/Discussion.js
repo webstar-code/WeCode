@@ -6,8 +6,9 @@ import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_cir
 import BackIcon from './utilties/CustomIcons'
 import Comments from './Comment';
 
-const Discussion = () => {
-
+const Discussion = ({match}) => {
+    const questionid = match.params.questionid;
+    console.log(questionid);
     return (
 
 
@@ -20,6 +21,7 @@ const Discussion = () => {
 
 
             <Question Render={'long'}/>
+
             <div className="px-4 py-2 bg-gray-300 text-gray-700">Comments</div>
             <div className="Comments">
                 <Comments />
