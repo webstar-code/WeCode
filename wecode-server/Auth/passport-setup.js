@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const User = require('../Schema/UserSchema');
+const User = require('../DBSchema/UserSchema');
 require('dotenv').config();
 
 passport.use(new GoogleStrategy({

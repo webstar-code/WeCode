@@ -35,7 +35,7 @@ let storage = new GridStorage({
 
 let upload = multer({storage});
 
-const UserProfile = require('../Schema/UserProfileSchema');
+const UserProfile = require('../DBSchema/UserProfileSchema');
 
 const authCheck = (req, res, next) => {
     console.log(req.user);
@@ -47,7 +47,7 @@ const authCheck = (req, res, next) => {
 }
 
 
-const Img = require('../Schema/ImgSchema');
+const Img = require('../DBSchema/ImgSchema');
 
 router.post('/upload', upload.single('file'), (req, res) => {
     const image = new Img({

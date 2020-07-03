@@ -11,11 +11,9 @@ const graphqlHTTP = require('express-graphql');
 const schema = require('./schema');
 const passportSetup = require('./Auth/passport-setup');
 const authRoute = require('./Routes/authRoute');
-const userprofileRoute = require('./Routes/userprofile');
-const activityRoute = require('./Routes/activity');
-const searchRoute = require('./Routes/search');
 
-const User = require('./Schema/UserSchema');
+
+const User = require('./DBSchema/UserSchema');
 const app = express();
 
 app.use(express.json());
@@ -53,9 +51,7 @@ app.use('/graphql', graphqlHTTP({
 }))
 
 app.use('/', authRoute);
-app.use('/api', userprofileRoute);
-// app.use('/api', activityRoute);
-// app.use('/api', searchRoute);
+// app.use('/api', userprofileRoute);
 
 app.get('/api/user', (req, res) => {
     // console.log(req.session);

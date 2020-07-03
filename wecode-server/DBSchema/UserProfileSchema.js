@@ -8,8 +8,11 @@ const UserProfileSchema = new mongoose.Schema({
     name: String,
     about: String,
     profession: String,
-    university: String,
-    ProfileImage: String
+    education: String,
+    ProfileImage: String,
+    post: Array,
+    followers: Array,
+    following: Array,
 })
 
 const UserProfile = connection.model('UserProfile', UserProfileSchema);

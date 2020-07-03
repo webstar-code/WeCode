@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true });
 const PostSchema = new mongoose.Schema({
+    pid: String,
     Userid: String,
     displayname: String,
     PostImageRef: String,
+    bgcolor: String,
+    bgcaption: String,
     caption: String,
+    likes: String,
+    comments: Array,
     createdAt: String,
 });
 

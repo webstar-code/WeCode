@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { animated, useSpring } from 'react-spring';
@@ -8,6 +8,7 @@ import { ReactComponent as Homeicon } from './icons/Navicons/browser.svg';
 import { ReactComponent as Addicon } from './icons//Navicons/icons8-plus.svg';
 import { ReactComponent as Messageicon } from './icons/Navicons/message.svg';
 import { ReactComponent as Searchicon } from './icons/Navicons/search.svg';
+import isAuthenticated from '../redux/actions/isAuthenticated'
 
 
 
@@ -22,10 +23,10 @@ const BottomNav = () => {
     const loggedIn = useSelector(state => state.islogged);
     // console.log(loggedIn);
 
-    // useEffect(() => {
-    //     dispatch(isAuthenticated());
+    useEffect(() => {
+        dispatch(isAuthenticated());
 
-    // }, [])
+    }, [])
 
     const toggleActive = () => {
         setPostActive(!PostActive);
@@ -74,7 +75,7 @@ const BottomNav = () => {
     return (
 
         <div className="flex align-center w-screen justify-around bottom-0 fixed p-2 .rounded-t-sm shadow bg-white">
-            <Link to="/feed"><Homeicon  className={`${home ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} onClick={() => activeicon('home')} /></Link>
+            <Link to="/"><Homeicon  className={`${home ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} onClick={() => activeicon('home')} /></Link>
             <Link to="/search"><Searchicon onClick={() => activeicon('search')} className={`${search ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
 
             <div className="flex relative justify-center w-8">
