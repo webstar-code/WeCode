@@ -55,14 +55,13 @@ const Profile = ({ match }) => {
     });
     
     const C = () => {
-        console.log(data);
         if(data) {
-            console.log(data.user.id);
+            console.log(data.user._id);
         }
     }
     C();
      // console.log(loggedIn);
-    // console.log(data);
+    console.log(data);
 
     // functions for more info on profile
     const showMore = () => {

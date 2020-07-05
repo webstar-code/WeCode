@@ -13,7 +13,15 @@ const UserProfile = require('../DBSchema/UserProfileSchema');
 const Post = require('../DBSchema/PostSchema');
 const Img = require('../DBSchema/ImgSchema');
 const Question = require('../DBSchema/QuestionSchema');
-
+const Comment = mongoose.model('Comment', {
+    pid: String,
+    puid: String,
+    displayname: String,
+    comment: String,
+    likes: String,
+    reply: Array,
+    createdAt: String
+});
 const MutationQueryType = new GraphQLObjectType({
     name: "mutation",
     description: "This is MutationQueryType",
@@ -51,15 +59,13 @@ const MutationQueryType = new GraphQLObjectType({
                 createdAt: { type: GraphQLString },
             },
             resolve: async (parent, args) => {
+                console.log(args);
                 const post = new Post(args);
                 UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
 
-                    user.post.push({post});
+                    user.post.push(post);
                     user.save();
                 })
-                return {post:post,pid: post._id};
-
-
             }
         },
         question: {
@@ -92,32 +98,17 @@ const MutationQueryType = new GraphQLObjectType({
                 reply: { type: GraphQLString },
                 createdAt: { type: GraphQLString }
             },
-            resolve: (args) => {
-              const { pid,puid, displayname, comment, likes, reply, createdAt } = args;
-              const Comment = new mongoose.Schema({
-                  pid: String,
-                  displayname: String,
-                  comment: String,
-                  reply: Array,
-                  createdAt: String
-              });
-              const newcomment = new Comment({
-                pid: pid,
-                displayname: displayname,
-                comment: comment,
-                reply: [],
-                createdAt: createdAt
-              })
+            resolve: (parent, args) => {
+                const newcomment = new Comment(args)
+                UserProfile.updateOne({'Userid': args.puid },
+                {$push: {"post.$[outer].comments": newcomment}},
+                {"arrayFilters": [{"outer._id": mongoose.Types.ObjectId(args.pid)}]}, (err, doc) => {
+                   if(err) {
+                       console.log(err);
+                   }
+                    console.log(doc);
+                })
 
-              UserProfile.findOne({Userid: puid}, (err, user) => {
-                    
-                  user.post.map(post => {
-                      if(post.pid === pid) {
-                          post.comment.push(newcomment);
-                      }
-                      console.log("comment added");
-                  })
-              })
             }
         }
     }

@@ -27,7 +27,7 @@ const UsersType = new GraphQLObjectType({
     description: "This is users query",
 
     fields: () => ({
-
+        _id: { type: GraphQLString },
         Userid: { type: GraphQLString },
         displayname: { type: GraphQLString },
         name: { type: GraphQLString },
@@ -36,7 +36,7 @@ const UsersType = new GraphQLObjectType({
         education: { type: GraphQLString },
         ProfileImgref: { type: GraphQLString },
         post: { type: new GraphQLList(PostType) },
-        following: { type: new GraphQLList(PostType) },
+        following: { type: new GraphQLList(FollowingType) },
         followers: { type: new GraphQLList(FollowingType) }
     })
 
@@ -46,7 +46,7 @@ const PostType = new GraphQLObjectType({
     name: "PostType",
     description: "this is for making posts",
     fields: () => ({
-        pid: {type: GraphQLString},
+        _id: {type: GraphQLString}, 
         Userid: { type: GraphQLString },
         displayname: { type: GraphQLString },
         bgcolor: { type: GraphQLString },
@@ -54,7 +54,7 @@ const PostType = new GraphQLObjectType({
         PostImageRef: { type: GraphQLString },
         caption: { type: GraphQLString },
         likes: { type: GraphQLString },
-        comments:  { type: GraphQLList(CommentType) },
+        comments:  { type: new GraphQLList(CommentType) },
         createdAt: { type: GraphQLString },
     })
 });
@@ -63,6 +63,7 @@ const QuestionType = new GraphQLObjectType({
     name: "QusetionType",
     description: "this is for making posts",
     fields: () => ({
+        _id: {type: GraphQLString},
         Userid: { type: GraphQLNonNull(GraphQLInt) },
         displayname: { type: GraphQLString },
         PostImageRef: { type: GraphQLString },
@@ -80,7 +81,7 @@ const CommentType = new GraphQLObjectType({
         displayname: { type: GraphQLString },
         comment: { type: GraphQLString },
         likes: { type: GraphQLString },
-        reply: { type: GraphQLList(CommentType) },
+        reply: { type: new GraphQLList(CommentType) },
         createdAt: { type: GraphQLString }
     })
 })
