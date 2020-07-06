@@ -30,7 +30,7 @@ const Get_USERPROFILE = gql`
              displayname,
              about,
              profession,
-             university
+             education
         }
     }
 
@@ -41,15 +41,15 @@ const Get_USERPROFILE = gql`
 const CREATE_USERPROFILE = gql`
 
     mutation CREATE_USERPROFILE($Userid: String!, $displayname: String!, $name: String!, 
-        $about: String, $profession: String, $university: String) {
+        $about: String, $profession: String, $education: String) {
             user(Userid: $Userid, displayname: $displayname, name: $name,
-                about: $about, profession: $profession, university: $university) {
+                about: $about, profession: $profession, education: $education) {
         Userid
         displayname,
         name,
         about,
         profession,
-        university,
+        education,
         ProfileImgref
             }
     }
@@ -64,9 +64,9 @@ const CreateProfile = (props) => {
     const loggedIn = useSelector(state => state.islogged);
     const displayname = loggedIn.data.name;
     const { loading, data, error } = useQuery(Get_USERPROFILE, { variables: { displayname } });
-    // console.log(loggedIn.data._id);
-    // console.log(data);
-
+    console.log(loggedIn.data._id);
+    console.log(data);
+    console.log(Profile_exists);
 
     const Check_User_Exists = () => {
         if (data && loggedIn && data.user) {
@@ -147,8 +147,8 @@ const CreateProfile = (props) => {
                         <option value="teacher">teacher</option>
                         <option value="employee">employee</option>
                     </select>
-                    <label htmlFor="university" className="block  font-bold my-2 text-gray-500">University</label>
-                    <input type="text" name="university" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
+                    <label htmlFor="education" className="block  font-bold my-2 text-gray-500">Education</label>
+                    <input type="text" name="education" ref={register} className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"></input>
 
                     <button  className="btn bg-green-500 px-6 py-3 hover:bg-green-701 rounded my-6 text-black-500 "><Link to="/search">Done</Link></button>
                 </form>

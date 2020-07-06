@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import islogged from './islogged';
 import users from './users';
-import userprofile from './userProfile';
+import UserProfile from './UserProfile';
 
 const allreducers = combineReducers({
     islogged,
     users,
-    userprofile
+    UserProfile
 });
 
 export default allreducers;

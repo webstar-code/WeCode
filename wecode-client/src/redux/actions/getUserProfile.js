@@ -1,18 +1,22 @@
-import { FETCH_USER_REQUEST, FETCH_USER_SUCCESS, FETCH_USER_FAILURE } from '../actions/fetchaction'
+import { FETCH_USERPROFILE_REQUEST, FETCH_USERPROFILE_SUCCESS, FETCH_USERPROFILE_FAILURE } from '../actions/fetchaction'
 
-const getUserProfile = (name) => {
-    return function(dispatch) {
-        dispatch(FETCH_USER_REQUEST());
-        fetch(`/api/userprofile/${name}`)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            dispatch(FETCH_USER_SUCCESS(data));
+const getUserProfile = (loading,data,error) => {
+    return function (dispatch) {
 
-        })
-        .catch(err => {
-            dispatch(FETCH_USER_FAILURE(err));
-        })
+      console.log("hello");
+        console.log(data);
+    
+        if(loading) {
+            dispatch(FETCH_USERPROFILE_REQUEST());
+        }
+        if(data) {
+            dispatch(FETCH_USERPROFILE_SUCCESS(data));
+        }
+        if(error) {
+            dispatch(FETCH_USERPROFILE_FAILURE(error));
+        }
+
+
     }
 }
 

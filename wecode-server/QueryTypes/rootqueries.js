@@ -75,7 +75,7 @@ const RootQueryType = new GraphQLObjectType({
 
         // Create A timleine
         timeline: {
-            type: new GraphQLObjectType({
+            type: new GraphQLList( new GraphQLObjectType({
                 name: "timeline",
                 fields: () => ({
                     _id: {type: GraphQLString}, 
@@ -89,7 +89,7 @@ const RootQueryType = new GraphQLObjectType({
                     comments:  { type: new GraphQLList(CommentType) },
                     createdAt: { type: GraphQLString },
                 })
-            }),
+            })),
             description: "create a timeline",
             args: {
                 displayname: { type: GraphQLString }
@@ -111,14 +111,19 @@ const RootQueryType = new GraphQLObjectType({
                             // Create a individual doc in Timline collection
                             Timeline.create(user.post, (err, doc) => {                                
                             })
+                           
                             // Sort it by createdAT (DAte) later 
-                            Timeline.find({}).sort({Userid: -1}).exec((err, doc) => {
-                                    return doc;    
-                                    console.log(doc);
-                            });
+                            // Timeline.find({}).sort({Userid: -1}).exec((err, doc) => {
+                            //     if(err) {
+                            //         console.log(err);
+                            //     }
+                            //     console.log(doc);                                     
+                            // });
                         })
 
                     })
+                    const i = Timeline.find().exec();
+                    console.log(i);
                 })
               
             }

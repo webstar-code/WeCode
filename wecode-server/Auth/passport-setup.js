@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
                 user.save()
                     .then((user) => {
                         return done(null, user);
-
+                        
                     });
             } else {
                 return done(null, user);

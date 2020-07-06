@@ -1,24 +1,24 @@
 
-const userProfileState = {
+const UserProfileState = {
     loading: false,
     data: null,
     error: ''
 }
 
-const userprofile = (state=userProfileState, action) => {
+const UserProfile = (state=UserProfileState, action) => {
     switch (action.type) {
-        case 'FETCH_USER_REQUEST':
+        case 'FETCH_USERPROFILE_REQUEST':
             return {
                 ...state,
                 loading: true
             }
-        case 'FETCH_USER_SUCCESS':
+        case 'FETCH_USERPROFILE_SUCCESS':
             return {
                 loading: false,
                 data: action.payload,
                 error: ''
             }
-        case 'FETCH_USER_FAILURE':
+        case 'FETCH_USERPROFILE_FAILURE':
             return {
                 loading: false,
                 data: '',
@@ -31,4 +31,4 @@ const userprofile = (state=userProfileState, action) => {
 
 
 
-export default userprofile;
+export default UserProfile;

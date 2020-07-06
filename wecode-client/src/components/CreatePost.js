@@ -3,14 +3,32 @@ import { useHistory } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
 import { ReactComponent as AddImageicon } from './icons/utilitiesicon/photo.svg';
+import { useSelector } from 'react-redux';
+import gql from 'graphql-tag';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
+const CREATE_POST = gql`
+    mutation CREATE_POST($Userid: String, $displayname: String, $bgcolor: String, $caption: String ) {
+        post(Userid: $Userid, displayname: $displayname, bgcolor: $bgcolor, caption: $caption) {
+            Userid,
+            displayname,
+            caption
+        }
+    }
 
+`;
 
 const CreatePost = () => {
     const [template, settemplate] = useState(false);
     const [bgcolor, setbgcolor] = useState('bg-white');
     const [textlength, settextlength] = useState(0);
+    const [caption, setcaption] = useState('');
     const history = useHistory();
+
+    const userdata = useSelector(state => state.UserProfile);
+    console.log(userdata);
+
+    const [createpost] = useMutation(CREATE_POST);
 
     const Goback = () => {
         history.goBack();
@@ -26,6 +44,19 @@ const CreatePost = () => {
     }
     const handleTextlength = (e) => {
         settextlength(e.currentTarget.value.length);
+        setcaption(e.currentTarget.value);
+    }
+
+    const uploadPost = () => {
+        
+    createpost({
+        variables: {
+            Userid: userdata.data.user.Userid,
+            displayname: userdata.data.user.displayname,
+            caption: caption
+        }
+    })
+
     }
 
     return (
@@ -76,7 +107,7 @@ const CreatePost = () => {
                             <label htmlFor="file-input" className="self-center"><AddImageicon className="w-6 h-auto cursor-pointer" /></label>
                             <input id="file-input" type="file" className="hidden" />
                         </div>
-                        <button className="btn px-2 py-3 mr-3">POST</button>
+                        <button className="btn px-2 py-3 mr-3" onClick={() => uploadPost()}>POST</button>
                     </div>
                 </div>
 

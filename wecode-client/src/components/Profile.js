@@ -1,10 +1,12 @@
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import { Link } from 'react-router-dom';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+
 import isAuthenticated from '../redux/actions/isAuthenticated';
+import getUserProfile from '../redux/actions/getUserProfile'; 
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg';
 import { ReactComponent as Editicon } from './icons/utilitiesicon/edit.svg';
@@ -12,56 +14,62 @@ import { ReactComponent as UpArrow } from './icons/utilitiesicon/uparrow.svg';
 import Post from './Post';
 import Question from './Question';
 
-
-
-
 const Get_USERPROFILE = gql`
-    query GET_USERPROFILE ($displayname: String){
-        user (displayname: $displayname) {
+query GET_USERPROFILE ($displayname: String){
+    user (displayname: $displayname) {
+        
+        Userid,
+        name,
+        displayname,
+        about,
+        profession,
+        education,
+        post {
             Userid,
-             name,
-             displayname,
-             about,
-             profession,
-             education,
-             post {
-                 Userid,
-                 caption
-             },
-             following {
-                 displayname
-             },
-             followers {
-                 displayname
-             }
+            displayname,
+            caption
+        },
+        following {
+            displayname
+        },
+        followers {
+            displayname
         }
     }
+}
 `;
 
+
+
 const Profile = ({ match }) => {
+    const displayname = match.params.name;
+
     const [show, setshow] = useState(false);
     const [postview, setpostview] = useState(true);
 
     // GEtting loggedIn data
-    const dispatch = useDispatch();
-    const loggedIn = useSelector(state => state.islogged);
-    useEffect(() => {
-        dispatch(isAuthenticated());
-
-    }, [])
-    const displayname = match.params.name;
     const { loading, data, error } = useQuery(Get_USERPROFILE, {
         variables: { displayname }
     });
-    
-    const C = () => {
-        if(data) {
-            console.log(data.user._id);
+
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+        dispatch(isAuthenticated());
+    }, [])
+   
+    useEffect(() => {
+        if(data && data.user) {
+            dispatch(getUserProfile(loading,data,error));
         }
-    }
-    C();
-     // console.log(loggedIn);
+    },[data])
+   
+    const loggedIn = useSelector(state => state.islogged);
+    const Userdata = useSelector(state => state.UserProfile);
+    console.log(Userdata);
     console.log(data);
+   
+     console.log(loggedIn);
 
     // functions for more info on profile
     const showMore = () => {
@@ -70,7 +78,6 @@ const Profile = ({ match }) => {
     const showPost = () => {
         setpostview(true);
     }
-
     const hidePost = () => {
         setpostview(false);
     }
@@ -140,11 +147,13 @@ const Profile = ({ match }) => {
 
                     {postview ?
                         <div className="container">
-                            <>
+                            {data.user.post.map(post => (
+                                <Post post={post} displayname={data.user.displayname} />
+                            )
+                            )}
+{/* 
                                 <Post />
-                                <Post />
-                                <Post />
-                            </>
+                                <Post /> */}
 
                         </div>
 

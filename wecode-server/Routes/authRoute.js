@@ -7,6 +7,7 @@ passport.authenticate('google', { scope: 'openid email profile' }));
 router.get('/auth/google/callback',
 passport.authenticate('google', {successRedirect: '/createprofile'}), (req, res) => {
     console.log(req.user);
+    
 });
 
 
