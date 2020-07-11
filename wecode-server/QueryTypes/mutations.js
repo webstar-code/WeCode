@@ -26,6 +26,7 @@ const MutationQueryType = new GraphQLObjectType({
     name: "mutation",
     description: "This is MutationQueryType",
     fields: {
+        // Creating Userprofile and upadating
         user: {
             type: UsersType,
             description: "create a user",
@@ -42,10 +43,31 @@ const MutationQueryType = new GraphQLObjectType({
                 followers: { type: GraphQLString }
             },
             resolve: async (parent, args) => {
-                const user = new UserProfile(args);
-                return user.save();
+                console.log("hello");
+                UserProfile.findOne({Userid: args.Userid}, (err, user) => {
+                    
+                    if(user) {
+                        console.log(args);
+                        console.log(user);
+                        user.replaceOne(args).then(() => {
+                            console.log("Profile updated");
+                        });
+                        
+                    }else{
+                        UserProfile.findOne({displayname: args.displayname}, (err, user) => {
+                            if(user) {
+                                console.log("User another displayname")
+                            }else{
+                                const newuser = new UserProfile(args);
+                                newuser.save();
+                            }
+                        })
+                    }
+                })
+               
             }
         },
+
         post: {
             type: PostType,
             description: "This is for createing Post",
@@ -65,6 +87,7 @@ const MutationQueryType = new GraphQLObjectType({
 
                     user.post.push(post);
                     user.save();
+                    return post;
                 })
             }
         },

@@ -13,6 +13,7 @@ const UserProfileSchema = new mongoose.Schema({
     post: Array,
     followers: Array,
     following: Array,
+    timeline: Array
 })
 
 const UserProfile = connection.model('UserProfile', UserProfileSchema);

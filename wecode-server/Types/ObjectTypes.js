@@ -37,7 +37,8 @@ const UsersType = new GraphQLObjectType({
         ProfileImgref: { type: GraphQLString },
         post: { type: new GraphQLList(PostType) },
         following: { type: new GraphQLList(FollowingType) },
-        followers: { type: new GraphQLList(FollowingType) }
+        followers: { type: new GraphQLList(FollowingType) },
+        timeline: {type: new GraphQLList(TimelineType)}
     })
 
 })
@@ -87,6 +88,23 @@ const CommentType = new GraphQLObjectType({
 })
 
 
+const TimelineType = new GraphQLObjectType({
+    name: "TimelineType",
+    description: "this is for get timeline",
+    fields: () => ({
+        pid: {type: GraphQLString},
+        _id: {type: GraphQLString}, 
+        Userid: { type: GraphQLString },
+        displayname: { type: GraphQLString },
+        bgcolor: { type: GraphQLString },
+        bgcaption: { type: GraphQLString },
+        PostImageRef: { type: GraphQLString },
+        caption: { type: GraphQLString },
+        likes: { type: GraphQLString },
+        comments:  { type: new GraphQLList(CommentType) },
+        createdAt: { type: GraphQLString },
+    })
+})
 const ImageType = new GraphQLObjectType({
     name: "ImageType",
     description: "images",
@@ -102,5 +120,6 @@ module.exports = {
     PostType: PostType,
     QuestionType: QuestionType,
     FollowingType: FollowingType,
-    CommentType: CommentType
+    CommentType: CommentType,
+    TimelineType: TimelineType
 }

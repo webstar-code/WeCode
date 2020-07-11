@@ -1,8 +1,8 @@
 const { GraphQLObjectType, GraphQLString, GraphQLInt,
     GraphQLList, GraphQLSchema, GraphQLNonNull,
-    Grap
+
 } = require('graphql');
-const { AccountType, UsersType, PostType, QuestionType,CommentType } = require('../Types/ObjectTypes')
+const { AccountType, UsersType, PostType, QuestionType, CommentType, TimelineType } = require('../Types/ObjectTypes')
 
 const User = require('../DBSchema/UserSchema');
 const UserProfile = require('../DBSchema/UserProfileSchema');
@@ -75,65 +75,45 @@ const RootQueryType = new GraphQLObjectType({
 
         // Create A timleine
         timeline: {
-            type: new GraphQLList( new GraphQLObjectType({
-                name: "timeline",
-                fields: () => ({
-                    _id: {type: GraphQLString}, 
-                    Userid: { type: GraphQLString },
-                    displayname: { type: GraphQLString },
-                    bgcolor: { type: GraphQLString },
-                    bgcaption: { type: GraphQLString },
-                    PostImageRef: { type: GraphQLString },
-                    caption: { type: GraphQLString },
-                    likes: { type: GraphQLString },
-                    comments:  { type: new GraphQLList(CommentType) },
-                    createdAt: { type: GraphQLString },
-                })
-            })),
-            description: "create a timeline",
+            type: (UsersType),
+            description: "get currnet user a timeline",
             args: {
-                displayname: { type: GraphQLString }
+                Userid: { type: GraphQLString }
             },
             resolve: (parent, args) => {
-                connection.db.dropCollection('timelines', (err, result) => {
-                    console.log("Timeline deleted");
-                })
-
-                UserProfile.findOne({ displayname: args.displayname }, (err, user) => {
+                console.log(args.Userid);
+                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
                     const following = user.following;
-                    console.log(following);
                     following.map(x => {
                         const a = x.displayname;
-                        UserProfile.findOne({ displayname: a }, (err, user) => {
+                        UserProfile.findOne({ displayname: a }, (err, fuser) => {
                             if (err) {
                                 console.log(err);
                             }
-                            // Create a individual doc in Timline collection
-                            Timeline.create(user.post, (err, doc) => {                                
+                            // Clear and push
+                            user.timeline.splice(0, user.timeline.length);
+                            fuser.post.map(post => {
+                                user.timeline.push(post);
+
                             })
-                           
-                            // Sort it by createdAT (DAte) later 
-                            // Timeline.find({}).sort({Userid: -1}).exec((err, doc) => {
-                            //     if(err) {
-                            //         console.log(err);
-                            //     }
-                            //     console.log(doc);                                     
-                            // });
+                            user.save()
                         })
-
                     })
-                    const i = Timeline.find().exec();
-                    console.log(i);
                 })
-              
-            }
+                // GEt updated USerProfile
+                return UserProfile.findOne({ Userid: args.Userid }).exec();
+
+            },
 
 
 
-        }
+
+
+        },
 
 
     }
+
 });
 
 module.exports = RootQueryType

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
 
 const Post = (props) => {
-    const { post, displayname} = props;
+    const { post } = props;
     
     return (
         <>

@@ -58,17 +58,14 @@ const Profile = ({ match }) => {
         dispatch(isAuthenticated());
     }, [])
    
-    useEffect(() => {
-        if(data && data.user) {
-            dispatch(getUserProfile(loading,data,error));
-        }
-    },[data])
+    // useEffect(() => {
+    //     if(data && data.user) {
+    //         dispatch(getUserProfile(loading,data,error));
+    //     }
+    // },[data])
    
     const loggedIn = useSelector(state => state.islogged);
-    const Userdata = useSelector(state => state.UserProfile);
-    console.log(Userdata);
     console.log(data);
-   
      console.log(loggedIn);
 
     // functions for more info on profile

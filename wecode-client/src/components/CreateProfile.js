@@ -68,6 +68,9 @@ const CreateProfile = (props) => {
     console.log(data);
     console.log(Profile_exists);
 
+    // storing Userid got from loggedIn user in localstorage
+    const Userid = loggedIn.data._id;
+    localStorage.setItem("Userid", Userid);
     const Check_User_Exists = () => {
         if (data && loggedIn && data.user) {
             if (loggedIn.data._id === data.user.Userid) {
