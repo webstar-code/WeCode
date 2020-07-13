@@ -17,6 +17,7 @@ const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNew
 });
 
 const RootQueryType = new GraphQLObjectType({
+
     name: "RootQueryType",
     description: "This is root query",
     fields: {
@@ -80,30 +81,30 @@ const RootQueryType = new GraphQLObjectType({
             args: {
                 Userid: { type: GraphQLString }
             },
-            resolve: (parent, args) => {
-                console.log(args.Userid);
-                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
-                    const following = user.following;
-                    following.map(x => {
-                        const a = x.displayname;
-                        UserProfile.findOne({ displayname: a }, (err, fuser) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                            // Clear and push
-                            user.timeline.splice(0, user.timeline.length);
-                            fuser.post.map(post => {
-                                user.timeline.push(post);
+            // resolve: (parent, args) => {
+            //     console.log(args.Userid);
+            //     UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
+            //         const following = user.following;
+            //         following.map(x => {
+            //             const a = x.displayname;
+            //             UserProfile.findOne({ displayname: a }, (err, fuser) => {
+            //                 if (err) {
+            //                     console.log(err);
+            //                 }
+            //                 // Clear and push
+            //                 user.timeline.splice(0, user.timeline.length);
+            //                 fuser.post.map(post => {
+            //                     user.timeline.push(post);
 
-                            })
-                            user.save()
-                        })
-                    })
-                })
-                // GEt updated USerProfile
-                return UserProfile.findOne({ Userid: args.Userid }).exec();
+            //                 })
+            //                 user.save()
+            //             })
+            //         })
+            //     })
+            //     // GEt updated USerProfile
+            //     return UserProfile.findOne({ Userid: args.Userid }).exec();
 
-            },
+            // },
 
 
 

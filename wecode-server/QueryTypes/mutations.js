@@ -13,6 +13,7 @@ const UserProfile = require('../DBSchema/UserProfileSchema');
 const Post = require('../DBSchema/PostSchema');
 const Img = require('../DBSchema/ImgSchema');
 const Question = require('../DBSchema/QuestionSchema');
+const { GraphQLUpload } = require('graphql-upload');
 const Comment = mongoose.model('Comment', {
     pid: String,
     puid: String,
@@ -43,28 +44,27 @@ const MutationQueryType = new GraphQLObjectType({
                 followers: { type: GraphQLString }
             },
             resolve: async (parent, args) => {
-                console.log("hello");
-                UserProfile.findOne({Userid: args.Userid}, (err, user) => {
-                    
-                    if(user) {
+                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
+
+                    if (user) {
                         console.log(args);
                         console.log(user);
                         user.replaceOne(args).then(() => {
                             console.log("Profile updated");
                         });
-                        
-                    }else{
-                        UserProfile.findOne({displayname: args.displayname}, (err, user) => {
-                            if(user) {
+
+                    } else {
+                        UserProfile.findOne({ displayname: args.displayname }, (err, user) => {
+                            if (user) {
                                 console.log("User another displayname")
-                            }else{
+                            } else {
                                 const newuser = new UserProfile(args);
                                 newuser.save();
                             }
                         })
                     }
                 })
-               
+
             }
         },
 
@@ -76,7 +76,7 @@ const MutationQueryType = new GraphQLObjectType({
                 displayname: { type: GraphQLString },
                 bgcolor: { type: GraphQLString },
                 bgcaption: { type: GraphQLString },
-                PostImageRef: { type: GraphQLString },
+                PostImgref: { type: GraphQLString },
                 caption: { type: GraphQLString },
                 createdAt: { type: GraphQLString },
             },
@@ -84,7 +84,7 @@ const MutationQueryType = new GraphQLObjectType({
                 console.log(args);
                 const post = new Post(args);
                 UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
-
+                    console.log(user);
                     user.post.push(post);
                     user.save();
                     return post;
@@ -123,14 +123,14 @@ const MutationQueryType = new GraphQLObjectType({
             },
             resolve: (parent, args) => {
                 const newcomment = new Comment(args)
-                UserProfile.updateOne({'Userid': args.puid },
-                {$push: {"post.$[outer].comments": newcomment}},
-                {"arrayFilters": [{"outer._id": mongoose.Types.ObjectId(args.pid)}]}, (err, doc) => {
-                   if(err) {
-                       console.log(err);
-                   }
-                    console.log(doc);
-                })
+                UserProfile.updateOne({ 'Userid': args.puid },
+                    { $push: { "post.$[outer].comments": newcomment } },
+                    { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args.pid) }] }, (err, doc) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log(doc);
+                    })
 
             }
         }

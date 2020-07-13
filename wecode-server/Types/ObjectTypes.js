@@ -2,6 +2,7 @@ const { GraphQLObjectType, GraphQLString, GraphQLInt,
     GraphQLList, GraphQLSchema, GraphQLNonNull, GraphQLScalarType,
 
 } = require('graphql');
+const { GraphQLUpload } = require('graphql-upload');
 
 const AccountType = new GraphQLObjectType({
     name: "AccoutnType",
@@ -34,7 +35,7 @@ const UsersType = new GraphQLObjectType({
         about: { type: GraphQLString },
         profession: { type: GraphQLString },
         education: { type: GraphQLString },
-        ProfileImgref: { type: GraphQLString },
+        ProfileImgref: { type: GraphQLString},
         post: { type: new GraphQLList(PostType) },
         following: { type: new GraphQLList(FollowingType) },
         followers: { type: new GraphQLList(FollowingType) },
@@ -52,7 +53,7 @@ const PostType = new GraphQLObjectType({
         displayname: { type: GraphQLString },
         bgcolor: { type: GraphQLString },
         bgcaption: { type: GraphQLString },
-        PostImageRef: { type: GraphQLString },
+        PostImgref: { type: GraphQLString },
         caption: { type: GraphQLString },
         likes: { type: GraphQLString },
         comments:  { type: new GraphQLList(CommentType) },
@@ -67,7 +68,7 @@ const QuestionType = new GraphQLObjectType({
         _id: {type: GraphQLString},
         Userid: { type: GraphQLNonNull(GraphQLInt) },
         displayname: { type: GraphQLString },
-        PostImageRef: { type: GraphQLString },
+        PostImgRef: { type: GraphQLString },
         caption: { type: GraphQLString },
         createdAt: { type: GraphQLString },
     })
@@ -98,7 +99,7 @@ const TimelineType = new GraphQLObjectType({
         displayname: { type: GraphQLString },
         bgcolor: { type: GraphQLString },
         bgcaption: { type: GraphQLString },
-        PostImageRef: { type: GraphQLString },
+        PostImgRef: { type: GraphQLString },
         caption: { type: GraphQLString },
         likes: { type: GraphQLString },
         comments:  { type: new GraphQLList(CommentType) },

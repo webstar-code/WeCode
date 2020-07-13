@@ -13,7 +13,13 @@ const Post = (props) => {
                 <Profileicon className="w-12 px-1" />
                             {post.displayname}
                             </div>
-                <div className="h-64 bg-black"></div>
+                {post.PostImgref ? 
+                <img src={`/api/image/${post.PostImgref}`} />
+            : null}
+                
+                
+                
+                
                 <div className="flex justify-around border-b-2 py-2">
                     <div className="">{post.like ? post.like : 0} </div>
                     <Link to="/comments/12345"><div className="">comments </div></Link>

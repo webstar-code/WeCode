@@ -11,6 +11,7 @@ const graphqlHTTP = require('express-graphql');
 const schema = require('./schema');
 const passportSetup = require('./Auth/passport-setup');
 const authRoute = require('./Routes/authRoute');
+const userprofileRoute = require('./Routes/userprofile');
 
 
 const User = require('./DBSchema/UserSchema');
@@ -51,7 +52,7 @@ app.use('/graphql', graphqlHTTP({
 }))
 
 app.use('/', authRoute);
-// app.use('/api', userprofileRoute);
+app.use('/api', userprofileRoute);
 
 app.get('/api/user', (req, res) => {
     // console.log(req.session);

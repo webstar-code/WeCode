@@ -68,10 +68,17 @@ function App() {
               <People />
             </Route>
             
-            <Route path="/createcomment" component={CreateComment} />
+            <Route path="/createcomment">
+                <CreateComment />
 
-            <Route path="/discussion/:questionid" component={Discussion} />
-            <Route path="/comments/:postid" component={PostComment} />
+              </Route>
+
+            <Route path="/discussion/:questionid" >
+              <Discussion />
+              </Route>
+            <Route path="/comments/:postid" >
+              <PostComment />
+            </Route>
 
             <div>
 

@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 import isAuthenticated from '../redux/actions/isAuthenticated';
-import getUserProfile from '../redux/actions/getUserProfile'; 
+import getUserProfile from '../redux/actions/getUserProfile';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { ReactComponent as DownArrow } from './icons/utilitiesicon/downarrow.svg';
 import { ReactComponent as Editicon } from './icons/utilitiesicon/edit.svg';
@@ -24,10 +24,14 @@ query GET_USERPROFILE ($displayname: String){
         about,
         profession,
         education,
+        ProfileImgref,
         post {
             Userid,
             displayname,
+            PostImgref,
+            bgcolor,
             caption
+
         },
         following {
             displayname
@@ -53,20 +57,20 @@ const Profile = ({ match }) => {
     });
 
     const dispatch = useDispatch();
-  
+
     useEffect(() => {
         dispatch(isAuthenticated());
     }, [])
-   
+
     // useEffect(() => {
     //     if(data && data.user) {
     //         dispatch(getUserProfile(loading,data,error));
     //     }
     // },[data])
-   
+
     const loggedIn = useSelector(state => state.islogged);
     console.log(data);
-     console.log(loggedIn);
+    console.log(loggedIn);
 
     // functions for more info on profile
     const showMore = () => {
@@ -90,11 +94,12 @@ const Profile = ({ match }) => {
 
         <>
 
-            {data && loggedIn ?
+            {data && data.user && loggedIn ?
 
                 <div className="container mb-16">
+
                     <div className="grid grid-cols-3 bg-blue-gray-300 mt-3">
-                        <Profileicon className="w-3/5 h-auto col-span-1 ml-3"></Profileicon>
+                        <img src={`/api/image/${data.user.ProfileImgref}`} alt="addimage" className="w-16 h-auto" />
                         <div className="flex col-span-2 self-center justify-between -ml-8">
                             <div className="flex-col">
                                 <h2 className="text-2xl font-semibold m-0 p-0">{data.user.displayname}</h2>
@@ -132,7 +137,7 @@ const Profile = ({ match }) => {
 
                         <div className="text-sm col-span-1 text-center font-medium">{data.user.post.length ? data.user.post.length : '0'} Posts</div>
                         <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.following.length ? data.user.following.length : '0'} Following</Link></div>
-                        <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.followers.length ? data.user.following.length  : '0' } Followers</Link></div>
+                        <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.followers.length ? data.user.following.length : '0'} Followers</Link></div>
                     </div>
 
                     <div className="flex justify-center  border-t-2 border-b-2 mt-2">
@@ -148,7 +153,7 @@ const Profile = ({ match }) => {
                                 <Post post={post} displayname={data.user.displayname} />
                             )
                             )}
-{/* 
+                            {/* 
                                 <Post />
                                 <Post /> */}
 

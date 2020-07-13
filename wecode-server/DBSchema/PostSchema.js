@@ -3,7 +3,7 @@ const connection = mongoose.createConnection(process.env.DB_CONNECTION, { useNew
 const PostSchema = new mongoose.Schema({
     Userid: String,
     displayname: String,
-    PostImageRef: String,
+    PostImgref: String,
     bgcolor: String,
     bgcaption: String,
     caption: String,
