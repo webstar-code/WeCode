@@ -49,7 +49,7 @@ function App() {
             </Route>
 
             <Route path="/createprofile">
-              <CreateProfile User={'webstar'} />
+              <CreateProfile />
             </Route>
 
             <Route path="/editprofile">

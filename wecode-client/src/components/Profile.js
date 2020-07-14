@@ -50,27 +50,14 @@ const Profile = ({ match }) => {
 
     const [show, setshow] = useState(false);
     const [postview, setpostview] = useState(true);
-
+    let localUserid = localStorage.getItem('Userid')
     // GEtting loggedIn data
-    const { loading, data, error } = useQuery(Get_USERPROFILE, {
+    const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
         variables: { displayname }
     });
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(isAuthenticated());
-    }, [])
-
-    // useEffect(() => {
-    //     if(data && data.user) {
-    //         dispatch(getUserProfile(loading,data,error));
-    //     }
-    // },[data])
-
-    const loggedIn = useSelector(state => state.islogged);
+    
+    
     console.log(data);
-    console.log(loggedIn);
 
     // functions for more info on profile
     const showMore = () => {
@@ -92,9 +79,9 @@ const Profile = ({ match }) => {
 
     return (
 
-        <>
+        <div>
 
-            {data && data.user && loggedIn ?
+            {data && data.user && localUserid ?
 
                 <div className="container mb-16">
 
@@ -106,11 +93,11 @@ const Profile = ({ match }) => {
                                 <h4 className="text-xl font-light" >{data.user.name}</h4>
                             </div>
 
-                            {/* {data.data.user.data.Userid === loggedIn.data._id ? <button className="btn ">Edit Profile</button> : null} */}
-
-                            <Link to="/editprofile" className="flex items-center border border-black rounded px-2 text-sm mt-2 mr-2 h-8">
-                                <Editicon className="w-6 h-auto px-1" />
+                            {data.user.Userid === localUserid ?
+                                <Link to="/editprofile" className="flex items-center border border-black rounded px-2 text-sm mt-2 mr-2 h-8">
+                                    <Editicon className="w-6 h-auto px-1" />
                             Edit Profile</Link>
+                                : null}
 
                         </div>
 
@@ -174,7 +161,7 @@ const Profile = ({ match }) => {
                 </div>
                 : <p>loading.....</p>}
 
-        </>
+        </div>
 
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { animated, useSpring } from 'react-spring';
@@ -10,23 +10,28 @@ import { ReactComponent as Messageicon } from './icons/Navicons/message.svg';
 import { ReactComponent as Searchicon } from './icons/Navicons/search.svg';
 import isAuthenticated from '../redux/actions/isAuthenticated'
 
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 
-
+const Get_USERPROFILE = gql`
+query GET_USERPROFILE ($Userid: String){
+    user (Userid: $Userid) {
+        displayname
+    }
+}
+`;
 
 const BottomNav = () => {
     const [PostActive, setPostActive] = useState(false);
     const [home, sethome] = useState(false);
     const [search, setsearch] = useState(null);
     const [message, setmessage] = useState(false);
-    const dispatch = useDispatch();
-    const loggedIn = useSelector(state => state.islogged);
-    // console.log(loggedIn);
-
-    useEffect(() => {
-        dispatch(isAuthenticated());
-
-    }, [])
+    let localUserid = localStorage.getItem('Userid')
+    // GEtting loggedIn data
+    const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
+        variables: { Userid: localUserid }
+    });
 
     const toggleActive = () => {
         setPostActive(!PostActive);
@@ -53,21 +58,21 @@ const BottomNav = () => {
             sethome(true);
             setsearch(false);
             setmessage(false);
-        }else{
+        } else {
             sethome(false);
         }
         if (icon === 'search') {
             sethome(false);
             setsearch(true)
             setmessage(false);
-        }else{
+        } else {
             setsearch(false);
         }
         if (icon === 'message') {
             sethome(false);
             setsearch(false);
             setmessage(true);
-        }else{
+        } else {
             setmessage(false);
         }
     }
@@ -75,19 +80,17 @@ const BottomNav = () => {
     return (
 
         <div className="flex align-center w-screen justify-around bottom-0 fixed p-2 .rounded-t-sm shadow bg-white">
-            <Link to="/"><Homeicon  className={`${home ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} onClick={() => activeicon('home')} /></Link>
+            <Link to="/"><Homeicon className={`${home ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} onClick={() => activeicon('home')} /></Link>
             <Link to="/search"><Searchicon onClick={() => activeicon('search')} className={`${search ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
 
             <div className="flex relative justify-center w-8">
-                <Animatedplus className="w-8 h-auto absolute z-10" style={plusprops} onClick={() => {toggleActive(); activeicon('')}} />
+                <Animatedplus className="w-8 h-auto absolute z-10" style={plusprops} onClick={() => { toggleActive(); activeicon('') }} />
                 <Link to="/createpost"><animated.button className="btn absolute bg-blue-gray text-white rounded-lg p-2 text-xl w-16" style={postprops} >Post</animated.button></Link>
                 <Link to="/createquestion"><animated.button className="btn absolute bg-blue-gray text-white rounded-lg p-2 text-xl w-16" style={askprops} >Ask</animated.button></Link>
             </div>
             {/* <Link to="/post"><Addicon className="w-8 h-auto"/></Link> */}
-            <Link to="/message"><Messageicon onClick={() => activeicon('message')}  className={`${message ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
-            {loggedIn ?
-                <Link to={`/profile/${loggedIn.data.name}`}><Profileicon className="w-8 h-auto" onClick={() => activeicon('')}/></Link>
-                : null}
+            <Link to="/message"><Messageicon onClick={() => activeicon('message')} className={`${message ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
+            <Link to={`${data ? `/profile/${data.user.displayname}` : null}`}><Profileicon className="w-8 h-auto" onClick={() => activeicon('')} /></Link>
         </div>
     );
 }

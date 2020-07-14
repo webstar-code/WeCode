@@ -36,10 +36,16 @@ const RootQueryType = new GraphQLObjectType({
             type: UsersType,
             description: "get a single user",
             args: {
+                Userid: { type: GraphQLString },
                 displayname: { type: GraphQLString }
+
             },
             resolve: (parent, args) => {
-                return UserProfile.findOne({ displayname: args.displayname }).exec();
+                if (args.Userid) {
+                    return UserProfile.findOne({ Userid: args.Userid }).exec();
+                } else {
+                    return UserProfile.findOne({ displayname: args.displayname }).exec();
+                }
             }
         },
         posts: {
@@ -81,30 +87,30 @@ const RootQueryType = new GraphQLObjectType({
             args: {
                 Userid: { type: GraphQLString }
             },
-            // resolve: (parent, args) => {
-            //     console.log(args.Userid);
-            //     UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
-            //         const following = user.following;
-            //         following.map(x => {
-            //             const a = x.displayname;
-            //             UserProfile.findOne({ displayname: a }, (err, fuser) => {
-            //                 if (err) {
-            //                     console.log(err);
-            //                 }
-            //                 // Clear and push
-            //                 user.timeline.splice(0, user.timeline.length);
-            //                 fuser.post.map(post => {
-            //                     user.timeline.push(post);
+            resolve: (parent, args) => {
+                console.log(args.Userid);
+                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
+                    const following = user.following;
+                    following.map(x => {
+                        const a = x.displayname;
+                        UserProfile.findOne({ displayname: a }, (err, fuser) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            // Clear and push
+                            user.timeline.splice(0, user.timeline.length);
+                            fuser.post.map(post => {
+                                user.timeline.push(post);
 
-            //                 })
-            //                 user.save()
-            //             })
-            //         })
-            //     })
-            //     // GEt updated USerProfile
-            //     return UserProfile.findOne({ Userid: args.Userid }).exec();
+                            })
+                            user.save()
+                        })
+                    })
+                })
+                // GEt updated USerProfile
+                return UserProfile.findOne({ Userid: args.Userid }).exec();
 
-            // },
+            },
 
 
 
