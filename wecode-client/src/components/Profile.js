@@ -26,11 +26,15 @@ query GET_USERPROFILE ($displayname: String){
         education,
         ProfileImgref,
         post {
+            _id,
             Userid,
             displayname,
             PostImgref,
+            ProfileImgref
+            likes,
             bgcolor,
-            caption
+            caption,
+            createdAt
 
         },
         following {
@@ -55,8 +59,8 @@ const Profile = ({ match }) => {
     const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
         variables: { displayname }
     });
-    
-    
+
+
     console.log(data);
 
     // functions for more info on profile
@@ -86,7 +90,10 @@ const Profile = ({ match }) => {
                 <div className="container mb-16">
 
                     <div className="grid grid-cols-3 bg-blue-gray-300 mt-3">
-                        <img src={`/api/image/${data.user.ProfileImgref}`} alt="addimage" className="w-16 h-auto" />
+                        <div className="w-16 h-16 ml-4">
+                            <img src={`/api/image/${data.user.ProfileImgref}`} alt="UserProfile Image" id="ProfileImgPreview"
+                                className="w-full h-full mx-auto object-cover rounded-full" />
+                        </div>
                         <div className="flex col-span-2 self-center justify-between -ml-8">
                             <div className="flex-col">
                                 <h2 className="text-2xl font-semibold m-0 p-0">{data.user.displayname}</h2>
@@ -101,26 +108,26 @@ const Profile = ({ match }) => {
 
                         </div>
 
-                        <div className="col-span-3 mx-auto">
+                        <div className="col-span-3 flex-col ml-4 my-3">
                             <p className="">{data.user.about}</p>
+                            <p className="">{data.user.profession}</p>
+                            <p className="">{data.user.education}</p>
                         </div>
-                        <div className="col-span-3 flex flex-col mx-12 my-3">
+                        {/* <div className="col-span-3 flex flex-col mx-12 my-3">
                             <animated.div style={showporps} className="flex flex-col">
                                 <span className="text-gray-500 text-sm">Profession</span>
                                 <p className="mb-3 ">{data.user.profession}</p>
                                 <span className="text-gray-500 text-sm">Education</span>
                                 <p className="mb-3 ">{data.user.education}</p>
-                                <span className="text-gray-500 text-sm">Experience</span>
-                                <p className="mb-3 ">{data.user.experience}</p>
-                            </animated.div>
+                            </animated.div> */}
 
-                            {show ?
+                            {/* {show ?
                                 <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
                                     <UpArrow className="w-3 mx-1" />show less...
                                     </div>
                                 : <div className="flex justify-center text-sm text-center text-blue-500" onClick={() => showMore()}>
-                                    <DownArrow className="w-3 mx-1" />show More...</div>}
-                        </div>
+                                    <DownArrow className="w-3 mx-1" />show More...</div>} */}
+                        {/* </div> */}
 
                         <div className="text-sm col-span-1 text-center font-medium">{data.user.post.length ? data.user.post.length : '0'} Posts</div>
                         <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.following.length ? data.user.following.length : '0'} Following</Link></div>

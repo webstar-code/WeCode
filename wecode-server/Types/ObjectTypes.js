@@ -53,9 +53,10 @@ const PostType = new GraphQLObjectType({
         displayname: { type: GraphQLString },
         bgcolor: { type: GraphQLString },
         bgcaption: { type: GraphQLString },
+        ProfileImgref: { type: GraphQLString },
         PostImgref: { type: GraphQLString },
         caption: { type: GraphQLString },
-        likes: { type: GraphQLString },
+        likes: { type: GraphQLInt },
         comments:  { type: new GraphQLList(CommentType) },
         createdAt: { type: GraphQLString },
     })
@@ -78,6 +79,7 @@ const CommentType = new GraphQLObjectType({
     name: "CommentType",
     description: "this is for comments",
     fields: () => ({
+        _id: {type: GraphQLString},
         pid: {type: GraphQLString},
         puid: {type: GraphQLString},
         displayname: { type: GraphQLString },
@@ -99,6 +101,7 @@ const TimelineType = new GraphQLObjectType({
         displayname: { type: GraphQLString },
         bgcolor: { type: GraphQLString },
         bgcaption: { type: GraphQLString },
+        ProfileImgref: { type: GraphQLString },
         PostImgRef: { type: GraphQLString },
         caption: { type: GraphQLString },
         likes: { type: GraphQLString },

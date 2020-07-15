@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
@@ -9,9 +9,21 @@ import { useForm } from 'react-hook-form';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
+const Get_USERPROFILE = gql`
+    query GET_USERPROFILE ($Userid: String){
+        user (Userid: $Userid) {
+            Userid,
+             displayname,
+             ProfileImgref
+        }
+    }
+`;
 const CREATE_POST = gql`
-    mutation CREATE_POST($Userid: String, $bgcolor: String, $caption: String, $PostImgref: String) {
-        post(Userid: $Userid,  bgcolor: $bgcolor, caption: $caption, PostImgref: $PostImgref) {
+    mutation CREATE_POST($Userid: String, $bgcolor: String, $caption: String, 
+      $PostImgref: String, $ProfileImgref: String, $displayname: String) {
+
+        post(Userid: $Userid,  bgcolor: $bgcolor, caption: $caption,
+           PostImgref: $PostImgref, ProfileImgref: $ProfileImgref, displayname: $displayname) {
             Userid,
             caption
         }
@@ -26,9 +38,11 @@ const CreatePost = () => {
   const [caption, setcaption] = useState('');
   const [showPreviewImg, setPreviewImg] = useState(false);
   const history = useHistory();
-
-  const [createpost] = useMutation(CREATE_POST);
   const localUserid = localStorage.getItem('Userid');
+
+  const { data: Userdata } = useQuery(Get_USERPROFILE, { variables: { Userid: localUserid } });
+    
+  const [createpost] = useMutation(CREATE_POST);
   const Goback = () => {
     history.goBack();
   }
@@ -76,6 +90,8 @@ const CreatePost = () => {
             {
               variables: {
                 Userid: localUserid,
+                displayname: Userdata.user.displayname,
+                ProfileImgref: Userdata.user.ProfileImgref,
                 PostImgref: `${filedata ? filedata.id : '1'}`,
                 caption: caption
                 // Also send the createdAt with moment
@@ -90,6 +106,8 @@ const CreatePost = () => {
         {
           variables: {
             Userid: localUserid,
+            displayname: Userdata.user.displayname,
+            ProfileImgref: Userdata.user.ProfileImgref,
             bgcolor: bgcolor,
             caption: data.caption
             // Also send the createdAt with moment
@@ -108,21 +126,24 @@ const CreatePost = () => {
           <h3 className="font-bold text-xl">New Post</h3>
         </div>
         <form id="form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-
-          <div className=" flex-col px-3 h-full">
-            <div className="flex  py-1">
-              <Profileicon className="w-16 h-auto " />
-              <p className="pt-4 pl-2">Webstar</p>
+          {Userdata && Userdata.user ?
+            <div class="flex items-center pt-4">
+              <div className="w-8 h-8 mx-2">
+                <img src={`/api/image/${Userdata.user.ProfileImgref}`} alt="UserProfile Image" id="ProfileImgPreview"
+                  className="w-full h-full mx-auto object-cover rounded-full" />
+              </div>
+          <p className="pl-2">{Userdata.user.displayname}</p>
             </div>
-            {showPreviewImg ? <img src="" alt="preview" id="postImg" className="" /> : null}
-            <div id="bgstyle" className={` flex-col ${bgcolor} px-2 text-2xl `}>
-              <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
+            : null}
 
-              <textarea name="caption" ref={register} required maxLength="512" rows="10" className={`w-full overflow-y-hidden border-none outline-none text-xl bg-transparent 
+          {showPreviewImg ? <img src="" alt="preview" id="postImg" className="" /> : null}
+          <div id="bgstyle" className={` flex-col ${bgcolor} px-2 text-2xl `}>
+            <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
+
+            <textarea name="caption" ref={register} required maxLength="512" rows="10" className={`w-full overflow-y-hidden border-none outline-none text-xl bg-transparent 
                         ${template ? "text-center self-center font-bold" : null}    
                         ${(bgcolor == "bg-blue-gray" || bgcolor === "bg-gradient-dblue" || bgcolor === "bg-gradient-pinkblue") ? "text-white" : null}
                         `} placeholder="Share coding tips, articles, snippets and anything code related" onChange={(e) => handleTextlength(e)}  ></textarea>
-            </div>
 
           </div>
 

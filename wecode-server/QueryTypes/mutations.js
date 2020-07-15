@@ -76,6 +76,7 @@ const MutationQueryType = new GraphQLObjectType({
                 displayname: { type: GraphQLString },
                 bgcolor: { type: GraphQLString },
                 bgcaption: { type: GraphQLString },
+                ProfileImgref: { type: GraphQLString },
                 PostImgref: { type: GraphQLString },
                 caption: { type: GraphQLString },
                 createdAt: { type: GraphQLString },
@@ -89,6 +90,47 @@ const MutationQueryType = new GraphQLObjectType({
                     user.save();
                     return post;
                 })
+            }
+        },
+        like: {
+            type: PostType,
+            description: "Get likes",
+            args: {
+                // coming from Post
+                _id: { type: GraphQLString },
+                Userid: { type: GraphQLString },
+                // Coming from comment
+                pid: { type: GraphQLString },
+                puid: { type: GraphQLString },
+                likes: { type: GraphQLInt },
+            },
+            resolve: (parent, args) => {
+                console.log(args);
+                UserProfile.updateOne({ 'Userid': args.Userid },
+                { $set: { "post.$[outer].likes": args.likes } },
+                { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log(doc);
+                })
+
+                // if (args.puid) {
+                //     UserProfile.updateOne({ 'Userid': args.puid },
+                //         { $set: { "post.$[outer].comments.$[inside].likes": args.likes } },
+                //         {
+                //             "arrayFilters": [
+                //                 { "outer._id": mongoose.Types.ObjectId(args.pid) },
+                //                 { "inside._id": mongoose.Types.ObjectId(args._id) }]
+                //         }, (err, doc) => {
+                //             if (err) {
+                //                 console.log(err);
+                //             }
+                //             console.log(doc);
+                //         })
+                // } else {
+                   
+                // }
             }
         },
         question: {
