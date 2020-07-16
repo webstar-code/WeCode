@@ -175,6 +175,25 @@ const MutationQueryType = new GraphQLObjectType({
                     })
 
             }
+        },
+
+        deletepost: {
+            type: PostType,
+            description: "delete a post",
+            args: {
+                _id: {type: GraphQLString},
+                Userid: {type: GraphQLString}
+            },
+            resolve: (parent, args) => {
+                console.log(args);
+                UserProfile.updateOne({Userid: args.Userid},
+                    { $pull: { 'post' : { '_id' :  mongoose.Types.ObjectId(args._id) } } },
+                    {multi: true}
+                    
+                    ).then(() => {
+                        console.log("upadteOne")
+                    })
+            }
         }
     }
 })

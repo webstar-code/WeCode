@@ -5,6 +5,7 @@ import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
 import { ReactComponent as AddImageicon } from './icons/utilitiesicon/photo.svg';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import moment from 'moment';
 
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -19,11 +20,11 @@ const Get_USERPROFILE = gql`
     }
 `;
 const CREATE_POST = gql`
-    mutation CREATE_POST($Userid: String, $bgcolor: String, $caption: String, 
-      $PostImgref: String, $ProfileImgref: String, $displayname: String) {
+    mutation CREATE_POST($Userid: String, $bgcolor: String, $caption: String,  
+      $PostImgref: String, $ProfileImgref: String, $displayname: String, $createdAt: String) {
 
-        post(Userid: $Userid,  bgcolor: $bgcolor, caption: $caption,
-           PostImgref: $PostImgref, ProfileImgref: $ProfileImgref, displayname: $displayname) {
+        post(Userid: $Userid,  bgcolor: $bgcolor, caption: $caption
+           PostImgref: $PostImgref, ProfileImgref: $ProfileImgref, displayname: $displayname, createdAt: $createdAt) {
             Userid,
             caption
         }
@@ -77,7 +78,8 @@ const CreatePost = () => {
     const form = document.getElementById('form');
     const filedata = new FormData(form);
     const file = filedata.get('file');
-
+    let timenow = moment().format();
+    console.log(timenow);
     console.log(file);;
     if (file && file.name) {
       fetch('/api/upload', {
@@ -93,8 +95,8 @@ const CreatePost = () => {
                 displayname: Userdata.user.displayname,
                 ProfileImgref: Userdata.user.ProfileImgref,
                 PostImgref: `${filedata ? filedata.id : '1'}`,
-                caption: caption
-                // Also send the createdAt with moment
+                caption: caption,
+                createdAt: moment().format()
               },
             })
         })
@@ -109,12 +111,12 @@ const CreatePost = () => {
             displayname: Userdata.user.displayname,
             ProfileImgref: Userdata.user.ProfileImgref,
             bgcolor: bgcolor,
-            caption: data.caption
-            // Also send the createdAt with moment
+            caption: data.caption,
+            createdAt: timenow
           },
         })
     }
-
+    history.push(`/profile/${Userdata.user.displayname}`)
   }
 
   return (
@@ -127,7 +129,7 @@ const CreatePost = () => {
         </div>
         <form id="form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
           {Userdata && Userdata.user ?
-            <div class="flex items-center pt-4">
+            <div className="flex items-center pt-4">
               <div className="w-8 h-8 mx-2">
                 <img src={`/api/image/${Userdata.user.ProfileImgref}`} alt="UserProfile Image" id="ProfileImgPreview"
                   className="w-full h-full mx-auto object-cover rounded-full" />

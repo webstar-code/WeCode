@@ -8,7 +8,7 @@ const PostSchema = new mongoose.Schema({
     bgcolor: String,
     bgcaption: String,
     caption: String,
-    likes: Number,
+    likes: {type: Number, default: 0},
     comments: Array,
     createdAt: String,
 });

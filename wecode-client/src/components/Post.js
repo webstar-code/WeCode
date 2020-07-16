@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+
 import { Link } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
+import { ReactComponent as Postmenu } from './icons/utilitiesicon/postmenu.svg'
+
+import EditPost from './EditPost';
+
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import moment from 'moment';
 
 const CREATE_LIKES = gql`
     mutation CREATE_LIKES($_id: String, $Userid: String, $likes: Int) {
@@ -16,13 +23,16 @@ const CREATE_LIKES = gql`
 `
 
 
+
+
 const Post = (props) => {
     const { post } = props;
     console.log(post._id, post.Userid, post.likes);
     const [likes, setlikes] = useState(post.likes);
     const [liked, setliked] = useState(false);
     const [createlikes] = useMutation(CREATE_LIKES);
-    console.log(likes);
+    const [showDialogbox, setshowDialogbox] = useState(false);
+
     const IncLikes = () => {
 
         if (liked) {
@@ -39,19 +49,31 @@ const Post = (props) => {
                     variables: {
                         _id: post._id,
                         Userid: post.Userid,
-                        likes: likes,
+                        likes: likes
                     },
                 })
 
         }, 2000)
     }
 
+    let timepassed = moment(post.createdAt).fromNow();
+    let postTime = post.createdAt.substr(0, 10).replace(/-/g, ',');
+    let nowtime = moment().format('YYYY MM DD');
+    let daysdiff = moment(postTime).diff(nowtime.replace(/ /g, ','));
 
-
+    // console.log(showDialogbox);
+    const AddDialog = () => {
+        setshowDialogbox(!showDialogbox)
+    }
 
 
     return (
         <>
+            {
+                showDialogbox ?
+                    <EditPost post={post} />
+                    : null
+            }
             {post ?
                 <div className="w-full flex-col">
                     <div className="flex items-center text-sm font-bold p-2">
@@ -62,6 +84,9 @@ const Post = (props) => {
                                 : 'X'}
                         </div>
                         {post.displayname}
+                        {post.Userid === localStorage.getItem('Userid') ?
+                            <Postmenu className="ml-auto w-4 h-auto" onClick={() => AddDialog()} />
+                            : null}
                     </div>
                     {post.PostImgref ?
                         <img src={`/api/image/${post.PostImgref}`} />
@@ -81,15 +106,22 @@ const Post = (props) => {
                         <div className="like">share </div>
                     </div>
 
-                    {post.PostImgref ? null
-                        :
+                    {post.PostImgref ?
                         <div className="flex py-2">
                             <span className="font-bold pr-2">{post.displayname}</span>
                             <p>{post.caption}</p>
                         </div>
+                        :
+                        null
                     }
                     <div className="py-4 text-gray-500 text-sm">
-                        <span className="text-sm">2 July 2020</span>
+                        <span className="text-sm">      {(timepassed.split(' ')[1] === "days" && timepassed.split(' ')[0] > 7) ||
+                            timepassed.split(' ')[1] === "months"
+                            ? moment()
+                                .subtract(daysdiff, "days")
+                                .format("DD MMM YY")
+                            : timepassed
+                        }</span>
                     </div>
                 </div>
                 : null}

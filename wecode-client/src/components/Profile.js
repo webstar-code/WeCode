@@ -57,7 +57,9 @@ const Profile = ({ match }) => {
     let localUserid = localStorage.getItem('Userid')
     // GEtting loggedIn data
     const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
-        variables: { displayname }
+        variables: { displayname },
+        pollInterval: 500
+
     });
 
 

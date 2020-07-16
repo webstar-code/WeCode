@@ -14,8 +14,12 @@ const GETUSERS = gql`
 
 `;
 
+
 const Search = () => {
     const { loading, data, error } = useQuery(GETUSERS);
+
+ 
+
     return(
 
         <>
