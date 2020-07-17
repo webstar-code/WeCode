@@ -19,6 +19,8 @@ const Get_USERPROFILE = gql`
         }
     }
 `;
+
+
 const CREATE_POST = gql`
     mutation CREATE_POST($Userid: String, $bgcolor: String, $caption: String,  
       $PostImgref: String, $ProfileImgref: String, $displayname: String, $createdAt: String) {

@@ -10,15 +10,22 @@ import EditPost from './EditPost';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import moment from 'moment';
+import { useEffect } from 'react';
 
 const CREATE_LIKES = gql`
-    mutation CREATE_LIKES($_id: String, $Userid: String, $likes: Int) {
-        like (_id: $_id, Userid: $Userid, likes: $likes) {
-            _id,
+    mutation CREATE_LIKES($_id: String, $Userid: String) {
+        like (_id: $_id, Userid: $Userid) {
             Userid,
-            likes
         }
     }
+`
+
+const REMOVE_LIKES = gql`
+        mutation REMOVE_LIKES($_id: String, $Userid: String) {
+            Removelike (_id: $_id, Userid: $Userid) {
+                Userid,
+            }
+        }
 
 `
 
@@ -27,35 +34,52 @@ const CREATE_LIKES = gql`
 
 const Post = (props) => {
     const { post } = props;
-    console.log(post._id, post.Userid, post.likes);
-    const [likes, setlikes] = useState(post.likes);
+    console.log(post.likes.length);
+    // console.log(post._id, post.Userid, post.likes);
+    // const [likes, setlikes] = useState(post.likes);
     const [liked, setliked] = useState(false);
     const [createlikes] = useMutation(CREATE_LIKES);
+    const [Removelike] = useMutation(REMOVE_LIKES);
+
     const [showDialogbox, setshowDialogbox] = useState(false);
+    const AddLike = () => {
+        setliked(true);
+        createlikes(
+            {
+                variables: {
+                    _id: post._id,
+                    Userid: post.Userid,
+                },
+            })
 
-    const IncLikes = () => {
-
-        if (liked) {
-            setlikes(likes - 1);
-            setliked(false)
-        } else {
-            setlikes(likes + 1);
-            setliked(true);
-        }
         // Later use Promises to handle the delay of below function
-        setTimeout(() => {
-            createlikes(
-                {
-                    variables: {
-                        _id: post._id,
-                        Userid: post.Userid,
-                        likes: likes
-                    },
-                })
-
-        }, 2000)
     }
 
+    const RemoveLike = () => {
+        setliked(false);
+        Removelike(
+            {
+                variables: {
+                    _id: post._id,
+                    Userid: post.Userid,
+                },
+            })
+
+    }
+
+    const CheckLiked = () => {
+        post.likes.map(user => {
+            if (user.Userid === localStorage.getItem('Userid')) {
+                setliked(true);
+            } else {
+                setliked(false);
+            }
+        })
+    }
+
+    useEffect(() => {
+        CheckLiked();
+    }, []);
     let timepassed = moment(post.createdAt).fromNow();
     let postTime = post.createdAt.substr(0, 10).replace(/-/g, ',');
     let nowtime = moment().format('YYYY MM DD');
@@ -65,6 +89,8 @@ const Post = (props) => {
     const AddDialog = () => {
         setshowDialogbox(!showDialogbox)
     }
+
+
 
 
     return (
@@ -101,7 +127,16 @@ const Post = (props) => {
 
 
                     <div className="flex justify-around border-b-2 py-2">
-                        <div className="" onClick={() => IncLikes()}>like {likes} </div>
+
+                        {liked ?
+                            <div className="bg-blue-500" onClick={() => RemoveLike()}>liked {post.likes.length}</div>
+                            :
+                            <div className="" onClick={() => AddLike()}>like  {post.likes.length}</div>
+
+                        }
+
+
+
                         <Link to="/comments/12345"><div className="">comments </div></Link>
                         <div className="like">share </div>
                     </div>

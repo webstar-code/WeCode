@@ -37,8 +37,8 @@ const UsersType = new GraphQLObjectType({
         education: { type: GraphQLString },
         ProfileImgref: { type: GraphQLString},
         post: { type: new GraphQLList(PostType) },
-        following: { type: new GraphQLList(FollowingType) },
-        followers: { type: new GraphQLList(FollowingType) },
+        following: { type: new GraphQLList(UsersType) },
+        followers: { type: new GraphQLList(UsersType) },
         timeline: {type: new GraphQLList(TimelineType)}
     })
 
@@ -56,7 +56,7 @@ const PostType = new GraphQLObjectType({
         ProfileImgref: { type: GraphQLString },
         PostImgref: { type: GraphQLString },
         caption: { type: GraphQLString },
-        likes: { type: GraphQLInt },
+        likes: { type: new GraphQLList(UsersType) },
         comments:  { type: new GraphQLList(CommentType) },
         createdAt: { type: GraphQLString },
     })

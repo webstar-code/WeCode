@@ -42,7 +42,7 @@ const CREATE_USERPROFILE = gql`
 const EditProfile = (props) => {
     let localUserid = localStorage.getItem('Userid');
     const [newdisplayname, setnewdisplayname] = useState('');
-    const { data } = useQuery(Get_USERPROFILE, { variables: { Userid: localUserid } });
+    const { data } = useQuery(Get_USERPROFILE, { variables: { Userid: localUserid } , pollInterval: 500});
     console.log(data);
     // Showing Preview of File/image selected
     const readUrl = (e) => {
@@ -103,6 +103,8 @@ const EditProfile = (props) => {
                         about: data.about,
                         profession: data.profession,
                         education: data.education,
+                        ProfileImgref: `${data.user.ProfileImgref}`
+
                     },
                 })
         }

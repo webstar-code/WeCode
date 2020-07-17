@@ -31,7 +31,9 @@ query GET_USERPROFILE ($displayname: String){
             displayname,
             PostImgref,
             ProfileImgref
-            likes,
+            likes {
+                Userid
+            }
             bgcolor,
             caption,
             createdAt
@@ -58,12 +60,9 @@ const Profile = ({ match }) => {
     // GEtting loggedIn data
     const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
         variables: { displayname },
-        pollInterval: 500
 
     });
 
-
-    console.log(data);
 
     // functions for more info on profile
     const showMore = () => {
@@ -87,7 +86,7 @@ const Profile = ({ match }) => {
 
         <div>
 
-            {data && data.user && localUserid ?
+            {data && data.user ?
 
                 <div className="container mb-16">
 

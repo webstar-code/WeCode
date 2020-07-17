@@ -32,6 +32,7 @@ const BottomNav = () => {
     const { loading, data, error, refetch } = useQuery(Get_USERPROFILE, {
         variables: { Userid: localUserid }
     });
+    // console.log(data);
 
     const toggleActive = () => {
         setPostActive(!PostActive);
@@ -90,7 +91,7 @@ const BottomNav = () => {
             </div>
             {/* <Link to="/post"><Addicon className="w-8 h-auto"/></Link> */}
             <Link to="/message"><Messageicon onClick={() => activeicon('message')} className={`${message ? "text-blue-600" : null} w-8 h-auto  stroke-current fill-current`} /></Link>
-            <Link to={`${data ? `/profile/${data.user.displayname}` : null}`}><Profileicon className="w-8 h-auto" onClick={() => activeicon('')} /></Link>
+            <Link to={`${data && data.user ? `/profile/${data.user.displayname}` : null}`}><Profileicon className="w-8 h-auto" onClick={() => activeicon('')} /></Link>
         </div>
     );
 }

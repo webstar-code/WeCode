@@ -1,50 +1,50 @@
 import React, { useState } from 'react';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg';
 import { Link } from 'react-router-dom'
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 
-const DBData = [{ displayname: 'webstar' },
-{ displayname: 'Jogn' },
-{ displayname: 'Sven' },
-{ displayname: 'Joergon' },
-{ displayname: 'Ikea' },
-{ displayname: 'Pew' }];
+// GET following List
+// make a copy of it with One extra field , unfollow: false
+// Unfollow: 
+//          Take the User send to backend Dp RemoveFollowing mutation
+            // In Copy of Array make unfollow true
+// Follow: 
+//          take the user send to backend Do AddFollowing mutation
+const GET_USERS = gql`
+    {
+        users {
+            displayname
+            ProfileImgref,
+        }
+    }
 
+`;
 
 const Following = () => {
-    const [followingData, setfollowingData] = useState(DBData.map(obj => ({ ...obj, unfollow: false })));
+    let localUserid = localStorage.getItem('Userid');
+  const { data } = useQuery(GET_USERS, { variables: { Userid: localUserid } });
+    console.log(data);
+    // const [followingData, setfollowingData] = useState(DBData.map(obj => ({ ...obj, unfollow: false })));
 
-    const RemoveFollowing = (following) => {
-        let index = DBData.findIndex(x => x.displayname === following.displayname)
-        if (index != -1) {
-            DBData.splice(index, 1);
-        }
-        following.unfollow = true
-        setfollowingData([...followingData]);
-    }
+    // const RemoveFollowing = (following) => {
+    //     let index = DBData.findIndex(x => x.displayname === following.displayname)
+    //     if (index != -1) {
+    //         DBData.splice(index, 1);
+    //     }
+    //     following.unfollow = true
+    //     setfollowingData([...followingData]);
+    // }
 
-    const AddFollowing = (following) => {
-        DBData.push({displayname: following.displayname});
-        following.unfollow = false;
-        setfollowingData([...followingData]);
-    }
+    // const AddFollowing = (following) => {
+    //     DBData.push({displayname: following.displayname});
+    //     following.unfollow = false;
+    //     setfollowingData([...followingData]);
+    // }
 
     return (
         <div className="p-2">
-            {followingData ? followingData.map(following => (
-                <div className="">
-                    <div className="flex items-center my-3">
-                        <Profileicon className="w-16 h-auto" />
-                        <h3 className="font-bold px-3">{following.displayname}</h3>
-                        {following.unfollow ?
-                            <button className="btn rounded justify-end px-3 bg-blue-500 ml-auto" onClick={() => AddFollowing(following)}>follow</button>
-                            :
-                            <button className="btn rounded border-black border justify-end px-3 ml-auto" onClick={() => RemoveFollowing(following)}>following</button>
-
-                        }
-
-                    </div>
-                </div>
-            )) : null}
+            
 
         </div>
     )

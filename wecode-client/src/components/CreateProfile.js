@@ -11,6 +11,17 @@ import isAuthenticated from '../redux/actions/isAuthenticated';
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+
+
+const GETUSERS = gql`
+    {
+        users {
+            displayname,
+        }
+    }
+
+`;
+
 const Get_USERPROFILE = gql`
     query GET_USERPROFILE ($Userid: String){
         user (Userid: $Userid) {
@@ -38,8 +49,6 @@ const CREATE_USERPROFILE = gql`
         ProfileImgref
             }
     }
-
-
 `;
 
 const CreateProfile = (props) => {
@@ -47,13 +56,22 @@ const CreateProfile = (props) => {
   const dispatch = useDispatch();
   const [Profile_exists, setProfile_exists] = useState(false);
   const [showPreviewImg, setPreviewImg] = useState(false);
+  const [displaynameExists, setdisplaynameExists] = useState(false);
+  // Check Unique displayname
+
+  const { data: AllUsers } = useQuery(GETUSERS);
+  console.log(AllUsers);
+
 
   // storing Userid got from loggedIn user in localstorage
   const loggedIn = useSelector(state => state.islogged);
   const Userid = loggedIn.data._id;
   let localUserid = localStorage.setItem("Userid", Userid);
+
   // Check if UserProfile already exists
   const { loading, data, error } = useQuery(Get_USERPROFILE, { variables: { Userid: localUserid } });
+  console.log(data);
+
   const Check_User_Exists = () => {
     if (data && data.user && localUserid === data.user.Userid) {
       setProfile_exists(true)
@@ -63,9 +81,10 @@ const CreateProfile = (props) => {
     dispatch(isAuthenticated());
   }, [])
 
-  useEffect(() => {
-    Check_User_Exists();
-  })
+  // useEffect(() => {
+  //   Check_User_Exists();
+  // },[])
+
   // Showing Preview of File/image selected
   const readUrl = (e) => {
     setPreviewImg(true);
@@ -81,52 +100,75 @@ const CreateProfile = (props) => {
   const { handleSubmit, register } = useForm();
   // Createing the UserProfile
   const [createuser] = useMutation(CREATE_USERPROFILE);
-  const onSubmit = async (data) => {
+
+  const CheckDisplayname = (displayname) => {
+    let x = false;
+    AllUsers.users.map(user => {
+      console.log(user.displayname);
+      if (user.displayname === displayname) {
+        x = false;
+        setdisplaynameExists(true);
+
+        return;
+      } else {
+        setdisplaynameExists(false);
+
+        x = true;
+      }
+    })
+    return x;
+  }
+
+
+  const onSubmit = (data) => {
     console.log(data);
 
+    const unique_displayname = CheckDisplayname(data.displayname);
+    
     const form = document.getElementById('form');
     const filedata = new FormData(form);
     const file = filedata.get('file');
     console.log(file);
-    if (file && file.name) {
-      console.log(file);
+    if (unique_displayname) {
+      if (file && file.name) {
+        console.log(file);
 
-      fetch('/api/upload', {
-        method: 'POST',
-        body: filedata
-      })
-        .then((res) => res.json())
-        .then((filedata) => {
-          createuser(
-            {
-              variables: {
-                Userid: loggedIn.data._id,
-                displayname: data.displayname,
-                name: data.name,
-                about: data.about,
-                profession: data.profession,
-                education: data.education,
-                ProfileImgref: `${filedata ? filedata.id : ''}`
-              },
-            })
+        fetch('/api/upload', {
+          method: 'POST',
+          body: filedata
         })
-        .catch(err => {
-          console.log(err);
-        });
-    } else {
-      createuser(
-        {
-          variables: {
-            Userid: loggedIn.data._id,
-            displayname: data.displayname,
-            name: data.name,
-            about: data.about,
-            profession: data.profession,
-            education: data.education,
-          },
-        })
+          .then((res) => res.json())
+          .then((filedata) => {
+            createuser(
+              {
+                variables: {
+                  Userid: loggedIn.data._id,
+                  displayname: data.displayname,
+                  name: data.name,
+                  about: data.about,
+                  profession: data.profession,
+                  education: data.education,
+                  ProfileImgref: `${filedata ? filedata.id : ''}`
+                },
+              })
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        createuser(
+          {
+            variables: {
+              Userid: loggedIn.data._id,
+              displayname: data.displayname,
+              name: data.name,
+              about: data.about,
+              profession: data.profession,
+              education: data.education,
+            },
+          })
+      }
     }
-
   };
 
   return (
@@ -152,7 +194,8 @@ const CreateProfile = (props) => {
           <div className="w-full outline-none my-3">
             <label htmlFor="displayname" className="font-medium mb-1">Displayname</label>
             <input type="text" name="displayname" ref={register}
-              className="w-full outline-none border border-gray-300 p-2 rounded-lg " placeholder={`${User ? User : null}`}></input>
+              className={`w-full outline-none border border-gray-300 p-2 rounded-lg ${displaynameExists ? "text-red-600" : ""}`}
+               placeholder={`${displaynameExists ? 'Already exists, use another displayname' : ''}`} onChange={(e) => CheckDisplayname(e.currentTarget.value)}></input>
           </div>
 
           <div className="w-full outline-none my-3">
@@ -180,7 +223,9 @@ const CreateProfile = (props) => {
             <input type="text" name="education" ref={register} className="w-full outline-none border border-gray-300 p-2 rounded-lg "></input>
           </div>
           <div className="flex">
-          <button className="px-4 py-2 rounded-lg bg-blue-500 text-white mt-3 ml-auto" type="submit"><Link to={`/`}>Done</Link></button>            
+            {/* <button className="px-4 py-2 rounded-lg bg-blue-500 text-white mt-3 ml-auto" type="submit"><Link to={`/`}>Done</Link></button>             */}
+            <button className="px-4 py-2 rounded-lg bg-blue-500 text-white mt-3 ml-auto" type="submit">Done</button>
+
           </div>
         </form>
       </div>

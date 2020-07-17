@@ -93,27 +93,28 @@ const MutationQueryType = new GraphQLObjectType({
             }
         },
         like: {
-            type: PostType,
+            type: new GraphQLObjectType({
+                name: "Likes",
+                fields: () => ({
+                    _id: { type: GraphQLString },
+                    Userid: { type: GraphQLString }
+                })
+            }),
             description: "Get likes",
             args: {
-                // coming from Post
                 _id: { type: GraphQLString },
                 Userid: { type: GraphQLString },
-                // Coming from comment
-                pid: { type: GraphQLString },
-                puid: { type: GraphQLString },
-                likes: { type: GraphQLInt },
             },
             resolve: (parent, args) => {
-                console.log(args);
+                const Userid = { Userid: args.Userid }
                 UserProfile.updateOne({ 'Userid': args.Userid },
-                { $set: { "post.$[outer].likes": args.likes } },
-                { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log(doc);
-                })
+                    { $push: { "post.$[outer].likes": Userid } },
+                    { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log(doc);
+                    })
 
                 // if (args.puid) {
                 //     UserProfile.updateOne({ 'Userid': args.puid },
@@ -129,10 +130,35 @@ const MutationQueryType = new GraphQLObjectType({
                 //             console.log(doc);
                 //         })
                 // } else {
-                   
+
                 // }
             }
         },
+        Removelike: {
+            type: new GraphQLObjectType({
+                name: "RemoveLikes",
+                fields: () => ({
+                    _id: { type: GraphQLString },
+                    Userid: { type: GraphQLString }
+                })
+             }),
+            description: "Remove likes",
+            args: {
+                _id: { type: GraphQLString },
+                Userid: { type: GraphQLString },
+            },
+            resolve: (parent, args) => {
+                UserProfile.updateOne({ 'Userid': args.Userid },
+                    { $pull: { "post.$[outer].likes": {'Userid': args.Userid } } },
+                    { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log(doc);
+                    })
+                }
+            },
+
         question: {
             type: QuestionType,
             description: "This is for createing Questions",
@@ -181,18 +207,18 @@ const MutationQueryType = new GraphQLObjectType({
             type: PostType,
             description: "delete a post",
             args: {
-                _id: {type: GraphQLString},
-                Userid: {type: GraphQLString}
+                _id: { type: GraphQLString },
+                Userid: { type: GraphQLString }
             },
             resolve: (parent, args) => {
                 console.log(args);
-                UserProfile.updateOne({Userid: args.Userid},
-                    { $pull: { 'post' : { '_id' :  mongoose.Types.ObjectId(args._id) } } },
-                    {multi: true}
-                    
-                    ).then(() => {
-                        console.log("upadteOne")
-                    })
+                UserProfile.updateOne({ Userid: args.Userid },
+                    { $pull: { 'post': { '_id': mongoose.Types.ObjectId(args._id) } } },
+                    { multi: true }
+
+                ).then(() => {
+                    console.log("upadteOne")
+                })
             }
         }
     }

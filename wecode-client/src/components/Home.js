@@ -24,7 +24,7 @@ const GET_TIMELINE = gql`
 
 const Home = () => {
 
-    console.log(localStorage.getItem("Userid").toString());
+    // console.log(localStorage.getItem("Userid").toString());
     const {loading, data, error} = useQuery(GET_TIMELINE, {
         variables: {Userid: "5f032115e4f77e0f6851222e"}
     });
