@@ -131,8 +131,8 @@ const Profile = ({ match }) => {
                         {/* </div> */}
 
                         <div className="text-sm col-span-1 text-center font-medium">{data.user.post.length ? data.user.post.length : '0'} Posts</div>
-                        <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.following.length ? data.user.following.length : '0'} Following</Link></div>
-                        <div className="text-sm col-span-1 text-center font-medium"><Link to="/people">{data.user.followers.length ? data.user.following.length : '0'} Followers</Link></div>
+                        <div className="text-sm col-span-1 text-center font-medium"><Link to={`/${data.user.displayname}/people`}>{data.user.following.length ? data.user.following.length : '0'} Following</Link></div>
+                        <div className="text-sm col-span-1 text-center font-medium"><Link to={`/${data.user.displayname}/people`}>{data.user.followers.length ? data.user.following.length : '0'} Followers</Link></div>
                     </div>
 
                     <div className="flex justify-center  border-t-2 border-b-2 mt-2">

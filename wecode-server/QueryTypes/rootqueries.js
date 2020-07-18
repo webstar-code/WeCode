@@ -82,7 +82,7 @@ const RootQueryType = new GraphQLObjectType({
 
         // Create A timleine
         timeline: {
-            type: (UsersType),
+            type: (PostType),
             description: "get currnet user a timeline",
             args: {
                 Userid: { type: GraphQLString }

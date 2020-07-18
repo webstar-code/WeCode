@@ -2,34 +2,41 @@ import React from 'react';
 import AppBar from './AppBar'
 import BottomNav from './BottomNav'
 import { ReactComponent as Profileicon } from './icons/Navicons/account_circle.svg';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+
+import gql from 'graphql-tag';
 
 import Post from './Post'
 import Question from './Question'
 
-const GET_TIMELINE = gql`
-    query GET_TIMELINE($Userid: String) {
-        
-        timeline(Userid: $Userid) {
+const GET_USER = gql`
+    query GET_USER($Userid: String){
+        user (Userid: $Userid) {
             timeline {
-                displayname
-                caption
-                pid
-              }
-            
+                _id,
+                Userid,
+                displayname,
+                PostImgref,
+                ProfileImgref
+                likes {
+                    Userid
+                }
+                bgcolor,
+                caption,
+                createdAt
+            }
         }
     }
+
 `;
 
 const Home = () => {
-
-    // console.log(localStorage.getItem("Userid").toString());
-    const {loading, data, error} = useQuery(GET_TIMELINE, {
-        variables: {Userid: "5f032115e4f77e0f6851222e"}
+    let localUserid = localStorage.getItem('Userid');
+    const { data } = useQuery(GET_USER, {
+        variables: { Userid: localUserid },
     });
     console.log(data);
-    return(
+    return (
         <div className="mb-16">
             <div className="flex overflow-x-auto">
                 <Profileicon className="w-24 mx-2 h-auto" />
@@ -45,14 +52,13 @@ const Home = () => {
 
             </div>
 
-
-
             <div className="">
-                {data ? data.timeline.timeline.map(timeline => (
+                {data ? data.user.timeline.map(timeline => (
                     <Post post={timeline} />
                 ))
                 : null}
-            </div>
+                
+                </div>
 
         </div>
 

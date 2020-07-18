@@ -64,8 +64,7 @@ function App() {
             <Route path="/createquestion">
               <CreateQuestion />
             </Route>
-            <Route path="/people">
-              <People />
+            <Route path="/:displayname/people" component={People}>
             </Route>
             
             <Route path="/createcomment">

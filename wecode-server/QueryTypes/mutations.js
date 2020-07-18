@@ -39,9 +39,6 @@ const MutationQueryType = new GraphQLObjectType({
                 profession: { type: GraphQLString },
                 education: { type: GraphQLString },
                 ProfileImgref: { type: GraphQLString },
-                post: { type: GraphQLString },
-                following: { type: GraphQLString },
-                followers: { type: GraphQLString }
             },
             resolve: async (parent, args) => {
                 UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
@@ -220,7 +217,71 @@ const MutationQueryType = new GraphQLObjectType({
                     console.log("upadteOne")
                 })
             }
-        }
+        },
+
+        Addfollowing: {
+            type: UsersType,
+            description: "Add following",
+            args: {
+                AdminUserid: {type: GraphQLString},
+                Admindisplayname: {type: GraphQLString},
+                AdminProfileImgref: {type: GraphQLString},
+                Userid: {type: GraphQLString},
+                displayname: {type: GraphQLString},
+                ProfileImgref: {type: GraphQLString},
+            },
+            resolve: (parent, args) => {
+                console.log(args);
+                const following = {
+                    Userid: args.Userid,
+                    displayname: args.displayname,
+                    ProfileImgref: args.ProfileImgref
+                };
+                const follower = {
+                    Userid: args.AdminUserid,
+                    displayname: args.Admindisplayname,
+                    ProfileImgref: args.AdminProfileImgref,
+                }
+               UserProfile.findOne({Userid: args.AdminUserid}, (err, user) => {
+                   user.following.push(following);
+                   user.save();
+               })
+
+               UserProfile.findOne({Userid: args.Userid}, (err, user) => {
+                user.followers.push(follower);
+                user.save();
+            })
+            }
+        },
+
+        Removefollowing: {
+            type: UsersType,
+            description: "Remove following",
+            args: {
+                AdminUserid: {type: GraphQLString},
+                Userid: {type: GraphQLString},
+                displayname: {type: GraphQLString},
+                ProfileImgref: {type: GraphQLString},
+            },
+            resolve: (parent, args) => {
+                console.log(args);
+                UserProfile.updateOne({ Userid: args.AdminUserid },
+                    { $pull: { 'following': { 'displayname': args.displayname } } },
+                    { multi: true }
+
+                ).then(() => {
+                    console.log("upadteOne")
+                })
+                UserProfile.updateOne({ Userid: args.Userid },
+                    { $pull: { 'followers': { 'Userid': args.AdminUserid } } },
+                    { multi: true }
+
+                ).then(() => {
+                    console.log("upadteOne")
+                })
+            }
+        },
+
     }
 })
 

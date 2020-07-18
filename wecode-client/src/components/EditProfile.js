@@ -185,3 +185,6 @@ const EditProfile = (props) => {
 }
 
 export default EditProfile;
+
+// Notes
+// Send following,followers data also 

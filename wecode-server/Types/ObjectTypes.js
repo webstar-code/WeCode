@@ -18,7 +18,8 @@ const FollowingType = new GraphQLObjectType({
     name: 'following',
     description: 'show following',
     fields: () => ({
-        displayname: { type: GraphQLString }
+        displayname: { type: GraphQLString },
+        ProfileImgref: {type: GraphQLString}
     })
 })
 
@@ -39,7 +40,7 @@ const UsersType = new GraphQLObjectType({
         post: { type: new GraphQLList(PostType) },
         following: { type: new GraphQLList(UsersType) },
         followers: { type: new GraphQLList(UsersType) },
-        timeline: {type: new GraphQLList(TimelineType)}
+        timeline: {type: new GraphQLList(PostType)}
     })
 
 })
