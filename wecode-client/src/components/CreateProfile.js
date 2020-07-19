@@ -102,7 +102,7 @@ const CreateProfile = (props) => {
   const [createuser] = useMutation(CREATE_USERPROFILE);
 
   const CheckDisplayname = (displayname) => {
-    let x = false;
+    let x = true;
     AllUsers.users.map(user => {
       console.log(user.displayname);
       if (user.displayname === displayname) {
@@ -112,7 +112,6 @@ const CreateProfile = (props) => {
         return;
       } else {
         setdisplaynameExists(false);
-
         x = true;
       }
     })
@@ -124,11 +123,12 @@ const CreateProfile = (props) => {
     console.log(data);
 
     const unique_displayname = CheckDisplayname(data.displayname);
-    
+    console.log(unique_displayname);
     const form = document.getElementById('form');
     const filedata = new FormData(form);
     const file = filedata.get('file');
     console.log(file);
+    console.log(unique_displayname);
     if (unique_displayname) {
       if (file && file.name) {
         console.log(file);

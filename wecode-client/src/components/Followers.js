@@ -4,46 +4,55 @@ import { Link } from 'react-router-dom'
 import People from './People';
 import { useState } from 'react';
 import Following from './Following';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 
-const DBData = [{ displayname: 'webstar' },
-{ displayname: 'Jogn' },
-{ displayname: 'Sven' },
-{ displayname: 'Joergon' },
-{ displayname: 'Ikea' },
-{ displayname: 'Pew' }]
+const REMOVE_FOLLOWING = gql`
+    mutation REMOVE_FOLLOWING($AdminUserid: String,$Userid: String, $displayname: String, $ProfileImgref: String) {
+        Removefollowing(AdminUserid: $AdminUserid, Userid: $Userid, displayname: $displayname, ProfileImgref: $ProfileImgref) {
+            Userid
+        }
+    }
+`;
 
+const Followers = (props) => {
+    let localUserid = localStorage.getItem('Userid');
+    const { AdminUser } = props.user;
+    const followers = props.followers;
+    const [followersData, setfollowersData] = useState(followers.map(obj => ({ ...obj })))
+    const [Removefollowing] = useMutation(REMOVE_FOLLOWING);
 
-const Followers = () => {
-    const [FollowersData, setFollowersData] = useState([...DBData])
-
-    const RemoveFollower = (follower) => {
-            let index = DBData.findIndex(x => x.displayname === Following.displayname);
-            if(index != 1) {
-                DBData.splice(index, 1);
-            } 
-
-           setFollowersData([...DBData]);
-       }
-
-    
-
+    const RemoveFollowing = (user) => {
+        Removefollowing({
+            variables: {
+                AdminUserid: AdminUser.Userid,
+                Userid: user.Userid,
+                displayname: user.displayname
+            }
+        })
+    }
 
 
     return (
         <div className="px-2">
-            {FollowersData ? FollowersData.map(follower => (
+            {followersData ? followersData.map(user => (
                 <>
-                    <div className="" >
-                        <div className="flex items-center my-3">
-                            <Profileicon className="w-16 h-auto" />
-                            <h3 className="font-bold px-3">{follower.displayname}</h3>
-                            <button className="btn rounded-lg justify-end px-3 border-black border ml-auto font-medium outline-none" onClick={() => RemoveFollower(follower)}>remove</button>
+                    <div className="flex items-center my-3">
+                        <div className="w-12 h-12 mr-2">
+                            {user.ProfileImgref ?
+                                <img src={`/api/image/${user.ProfileImgref}`} alt="UserProfile Image"
+                                    className="w-full h-full object-cover rounded-full" />
+
+                                : <Profileicon className="w-full h-full object-cover rounded-full" />}
                         </div>
+                        <h3 className="font-bold px-3"><Link to={`/profile/${user.displayname}`}>{user.displayname}</Link></h3>
+                        <button className="btn rounded justify-end px-3 border border-black ml-auto" onClick={() => RemoveFollowing(user)}>Remove</button>
                     </div>
                 </>
+            ))
 
-            )) : null}
-
+            : <div className="text-gray-600 text-2xl text-center"> No followers </div>
+            }
 
 
         </div >

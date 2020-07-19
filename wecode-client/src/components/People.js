@@ -52,7 +52,7 @@ const People = ({ match }) => {
                         <div className="text-center font-medium text-sm" onClick={() => setactivetab(false)}>following  {data.user.following.length}</div>
                     </div>
                     {
-                        activetab ? <Followers followers={data.user.followers} /> : <Following following={[data.user.following]} />
+                        activetab ? <Followers followers={data.user.followers} user={data} /> : <Following following={[data.user.following]} user={data}  />
                     }
                 </>
             : <p>Loading ...</p>}

@@ -29,6 +29,7 @@ const REMOVE_FOLLOWING = gql`
 `;
 const Following = (props) => {
     const [following] = props.following;
+    const { AdminUserid } = props.user;
     const [followingData, setfollowingData] = useState(following.map(obj => ({ ...obj, unfollow: false })));
     console.log(followingData);
     console.log(following);
@@ -41,7 +42,10 @@ const Following = (props) => {
         setfollowingData([...followingData]);
         Addfollowing({
             variables: {
-                localUserid: localUserid,
+                AdminUserid: AdminUserid.Userid,
+                Admindisplayname: AdminUserid.displayname,
+                AdminProfileImgref: AdminUserid.ProfileImgref,
+                Userid: user.Userid,
                 displayname: user.displayname,
                 ProfileImgref: user.ProfileImgref
             }
@@ -52,9 +56,11 @@ const Following = (props) => {
         // save unfollow changes
         user.unfollow = true;
         setfollowingData([...followingData]);
+
         Removefollowing({
             variables: {
-                localUserid: localUserid,
+                AdminUserid: localUserid,
+                Userid: user.Userid,
                 displayname: user.displayname
             }
         })

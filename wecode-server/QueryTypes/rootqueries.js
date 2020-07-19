@@ -82,7 +82,7 @@ const RootQueryType = new GraphQLObjectType({
 
         // Create A timleine
         timeline: {
-            type: (PostType),
+            type: (UsersType),
             description: "get currnet user a timeline",
             args: {
                 Userid: { type: GraphQLString }
@@ -93,12 +93,14 @@ const RootQueryType = new GraphQLObjectType({
                     const following = user.following;
                     following.map(x => {
                         const a = x.displayname;
+                        console.log(a);
                         UserProfile.findOne({ displayname: a }, (err, fuser) => {
                             if (err) {
                                 console.log(err);
                             }
                             // Clear and push
                             user.timeline.splice(0, user.timeline.length);
+                            console.log(fuser);
                             fuser.post.map(post => {
                                 user.timeline.push(post);
 

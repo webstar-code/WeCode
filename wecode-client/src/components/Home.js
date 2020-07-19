@@ -12,8 +12,7 @@ import Question from './Question'
 const GET_USER = gql`
     query GET_USER($Userid: String){
         user (Userid: $Userid) {
-            timeline {
-                _id,
+               timeline { _id,
                 Userid,
                 displayname,
                 PostImgref,
@@ -53,12 +52,12 @@ const Home = () => {
             </div>
 
             <div className="">
-                {data ? data.user.timeline.map(timeline => (
+                {data && data.user ? data.user.timeline.map(timeline => (
                     <Post post={timeline} />
                 ))
-                : null}
-                
-                </div>
+                    : null}
+
+            </div>
 
         </div>
 
