@@ -38,6 +38,7 @@ const UsersType = new GraphQLObjectType({
         education: { type: GraphQLString },
         ProfileImgref: { type: GraphQLString},
         post: { type: new GraphQLList(PostType) },
+        question: {type: new GraphQLList(QuestionType)},
         following: { type: new GraphQLList(UsersType) },
         followers: { type: new GraphQLList(UsersType) },
         timeline: {type: new GraphQLList(PostType)}
@@ -68,10 +69,12 @@ const QuestionType = new GraphQLObjectType({
     description: "this is for making posts",
     fields: () => ({
         _id: {type: GraphQLString},
-        Userid: { type: GraphQLNonNull(GraphQLInt) },
+        Userid: { type: GraphQLString },
         displayname: { type: GraphQLString },
-        PostImgRef: { type: GraphQLString },
-        caption: { type: GraphQLString },
+        question: { type: GraphQLString },
+        description: { type: GraphQLString },
+        tags: { type: new GraphQLList(GraphQLString) },
+        stars: { type: new GraphQLList(UsersType) },
         createdAt: { type: GraphQLString },
     })
 });

@@ -12,7 +12,7 @@ const User = require('../DBSchema/UserSchema');
 const UserProfile = require('../DBSchema/UserProfileSchema');
 const Post = require('../DBSchema/PostSchema');
 const Img = require('../DBSchema/ImgSchema');
-const Question = require('../DBSchema/QuestionSchema');
+const QuestionSchema = require('../DBSchema/QuestionSchema');
 const { GraphQLUpload } = require('graphql-upload');
 const Comment = mongoose.model('Comment', {
     pid: String,
@@ -89,6 +89,28 @@ const MutationQueryType = new GraphQLObjectType({
                 })
             }
         },
+
+        Question: {
+            type: QuestionType,
+            description: "This is for createing Questions",
+            args: {
+                Userid: { type: GraphQLString },
+                displayname: { type: GraphQLString },
+                question: { type: GraphQLString },
+                description: { type: GraphQLString },
+                tags: { type: new GraphQLList(GraphQLString) },
+                createdAt: { type: GraphQLString },
+            },
+            resolve: (parent, args) => {
+                console.log(args);
+                const question = new QuestionSchema(args);
+                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
+                    user.question.push(question);
+                    user.save();
+                })
+                return question;
+            }
+        },
         like: {
             type: new GraphQLObjectType({
                 name: "Likes",
@@ -101,17 +123,33 @@ const MutationQueryType = new GraphQLObjectType({
             args: {
                 _id: { type: GraphQLString },
                 Userid: { type: GraphQLString },
+                contentType: { type: GraphQLString }
             },
             resolve: (parent, args) => {
-                const Userid = { Userid: args.Userid }
-                UserProfile.updateOne({ 'Userid': args.Userid },
-                    { $push: { "post.$[outer].likes": Userid } },
-                    { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        console.log(doc);
-                    })
+                if (args.contentType === 'post') {
+                    console.log(args);
+
+                    const Userid = { Userid: args.Userid }
+                    UserProfile.updateOne({ 'Userid': args.Userid },
+                        { $push: { "post.$[outer].likes": Userid } },
+                        { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log(doc);
+                        })
+                } else if (args.contentType === 'question') {
+                    console.log(args);
+                    const Userid = { Userid: args.Userid }
+                    UserProfile.updateOne({ 'Userid': args.Userid },
+                        { $push: { "question.$[outer].stars": Userid } },
+                        { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log(doc);
+                        })
+                }
 
                 // if (args.puid) {
                 //     UserProfile.updateOne({ 'Userid': args.puid },
@@ -136,44 +174,40 @@ const MutationQueryType = new GraphQLObjectType({
                 name: "RemoveLikes",
                 fields: () => ({
                     _id: { type: GraphQLString },
-                    Userid: { type: GraphQLString }
+                    Userid: { type: GraphQLString },
+
                 })
-             }),
+            }),
             description: "Remove likes",
             args: {
                 _id: { type: GraphQLString },
                 Userid: { type: GraphQLString },
+                contentType: { type: GraphQLString }
             },
             resolve: (parent, args) => {
-                UserProfile.updateOne({ 'Userid': args.Userid },
-                    { $pull: { "post.$[outer].likes": {'Userid': args.Userid } } },
-                    { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        console.log(doc);
-                    })
+                if (args.contentType === 'post') {
+                    UserProfile.updateOne({ 'Userid': args.Userid },
+                        { $pull: { "post.$[outer].likes": { 'Userid': args.Userid } } },
+                        { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log(doc);
+                        })
+                } else if (args.contentType === 'question') {
+                    const Userid = { Userid: args.Userid }
+                    UserProfile.updateOne({ 'Userid': args.Userid },
+                        { $pull: { "question.$[outer].stars": Userid } },
+                        { "arrayFilters": [{ "outer._id": mongoose.Types.ObjectId(args._id) }] }, (err, doc) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log(doc);
+                        })
                 }
-            },
-
-        question: {
-            type: QuestionType,
-            description: "This is for createing Questions",
-            args: {
-                Userid: { type: GraphQLNonNull(GraphQLInt) },
-                displayname: { type: GraphQLString },
-                question: { type: GraphQLString },
-                createdAt: { type: GraphQLString },
-            },
-            resolve: (parent, args) => {
-                // const question = new question(args);
-                // UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
-                //     user.question.push(question);
-                //     user.save();
-                // })
-                // return question;
             }
         },
+
         comment: {
             type: CommentType,
             description: "Create A Comment",
@@ -196,6 +230,7 @@ const MutationQueryType = new GraphQLObjectType({
                         }
                         console.log(doc);
                     })
+
 
             }
         },
@@ -223,12 +258,12 @@ const MutationQueryType = new GraphQLObjectType({
             type: UsersType,
             description: "Add following",
             args: {
-                AdminUserid: {type: GraphQLString},
-                Admindisplayname: {type: GraphQLString},
-                AdminProfileImgref: {type: GraphQLString},
-                Userid: {type: GraphQLString},
-                displayname: {type: GraphQLString},
-                ProfileImgref: {type: GraphQLString},
+                AdminUserid: { type: GraphQLString },
+                Admindisplayname: { type: GraphQLString },
+                AdminProfileImgref: { type: GraphQLString },
+                Userid: { type: GraphQLString },
+                displayname: { type: GraphQLString },
+                ProfileImgref: { type: GraphQLString },
             },
             resolve: (parent, args) => {
                 console.log(args);
@@ -242,15 +277,15 @@ const MutationQueryType = new GraphQLObjectType({
                     displayname: args.Admindisplayname,
                     ProfileImgref: args.AdminProfileImgref,
                 }
-               UserProfile.findOne({Userid: args.AdminUserid}, (err, user) => {
-                   user.following.push(following);
-                   user.save();
-               })
+                UserProfile.findOne({ Userid: args.AdminUserid }, (err, user) => {
+                    user.following.push(following);
+                    user.save();
+                })
 
-               UserProfile.findOne({Userid: args.Userid}, (err, user) => {
-                user.followers.push(follower);
-                user.save();
-            })
+                UserProfile.findOne({ Userid: args.Userid }, (err, user) => {
+                    user.followers.push(follower);
+                    user.save();
+                })
             }
         },
 
@@ -258,10 +293,10 @@ const MutationQueryType = new GraphQLObjectType({
             type: UsersType,
             description: "Remove following",
             args: {
-                AdminUserid: {type: GraphQLString},
-                Userid: {type: GraphQLString},
-                displayname: {type: GraphQLString},
-                ProfileImgref: {type: GraphQLString},
+                AdminUserid: { type: GraphQLString },
+                Userid: { type: GraphQLString },
+                displayname: { type: GraphQLString },
+                ProfileImgref: { type: GraphQLString },
             },
             resolve: (parent, args) => {
                 console.log(args);

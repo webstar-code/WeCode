@@ -4,6 +4,9 @@ const QuestionSchema = new mongoose.Schema({
     Userid: String,
     displayname: String,
     question: String,
+    description: String,
+    tags: Array,
+    stars: Array,
     createdAt: String,
 });
 

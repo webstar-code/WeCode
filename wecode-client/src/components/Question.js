@@ -1,70 +1,92 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'
-import { useState } from 'react';
 
-/*  
-    {   
-        QID : unique id,
-        User : {
-                profileImg,
-                name
-                },
-        question: String,
-        description: String,
-        tags: [  html , css , js ]
-        createAt: String,
-        stars: Number,
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
+import moment from 'moment';
+
+const CREATE_LIKES = gql`
+    mutation CREATE_LIKES($_id: String, $Userid: String) {
+        like (_id: $_id, Userid: $Userid, contentType: "question") {
+            Userid,
+        }
     }
+`
 
+const REMOVE_LIKES = gql`
+        mutation REMOVE_LIKES($_id: String, $Userid: String) {
+            Removelike (_id: $_id, Userid: $Userid, contentType: "question") {
+                Userid,
+            }
+        }
 
-*/
-const questions = [{
-    name: "webstar",
-    question: "Hey is C still relevant in 2020 ? ",
-    description: `Many universtires are teaching C language as first year and dont find it very uesfukk loewn espsn
-        ahsdhasdbhasdbhabdshbahsdbhasbdhbasd jasdjasnjndb hasbda akjds nsadn  ansdjn asn dkjasnd njasd  ansd
-        asjd aknd jas jkdasn njk nasdnf;ads n askjnf b bsdb ab hfba ;sdnf kjasdf jn asljdf sdf ksbf  k`,
-    tags: ['html', 'css', 'js', 'c', 'c++', 'programming'],
-    createAt: '2 July 2020',
-    stars: 2,
-}
-]
-
+`
 const Question = (props) => {
     const Render = props.Render
-    const [Renderin, setrender] = useState(Render)
+    const question = props.question;
+    console.log(question);
+    const [Renderin, setrender] = useState('long')
+    const [liked, setliked] = useState(false);
+    const [createlikes] = useMutation(CREATE_LIKES);
+    const [Removelike] = useMutation(REMOVE_LIKES);
 
+    const AddLike = () => {
+        setliked(true);
+        createlikes(
+            {
+                variables: {
+                    _id: question._id,
+                    Userid: question.Userid,
+                },
+            })
+
+        // Later use Promises to handle the delay of below function
+    }
+
+    const RemoveLike = () => {
+        setliked(false);
+        Removelike(
+            {
+                variables: {
+                    _id: question._id,
+                    Userid: question.Userid,
+                },
+            })
+
+    }
+
+    const CheckLiked = () => {
+        if( question && question.stars) {
+            question.stars.map(user => {
+                if (user.Userid === localStorage.getItem('Userid')) {
+                    setliked(true);
+                } else {
+                    setliked(false);
+                }
+            })
+        }
+        
+    }
+
+    useEffect(() => {
+        CheckLiked();
+    }, []);
     return (
-        // <div className="w-full flex-col shadow border-black-900 ">
-        //     <div className="flex text-sm font-bold py-2 my-4">
-        //         <Profileicon className="w-12" />
-        //                         webstar
-        //                     </div>
-        //     <div className="text-2xl py-4 px-2 border-b-2">
-        //         <p>What is the C language</p>
-        //     </div>
-        //     <div className="flex justify-around py-2">
-        //         <div className="">stars</div>
-        //         <Link to="/discussion"><div className="like">discuss</div></Link>
-        //     </div>
-        //     <div className="text-gray-500 text-sm px-2">2 July 2020</div>
-
-        // </div>
 
         <>
-            {questions ? questions.map(question => (
+            {question ?
                 <div className="w-full flex-col shadow border-black-900 my-2">
                     <div className="flex text-sm font-bold py-2">
                         <Profileicon className="w-12" />
-                        {question.name}
-                    <div className="text-gray-500 text-xsm px-2">{question.createAt}</div>
+                        {props.displayname}
+                        <div className="text-gray-500 text-xsm px-2">{question.createAt}</div>
 
                     </div>
                     <div className=" px-3">
                         <p className="font-medium text-xl">{question.question}</p>
-                        {Renderin === 'long' ?  <p className="text-sm">{question.description}</p>
-                      
+                        {Renderin === 'long' ? <p className="text-sm">{question.description}</p>
+
                             :
                             <p className="text-sm h-16 overflow-hidden">{question.description}</p>
                         }
@@ -80,12 +102,17 @@ const Question = (props) => {
 
 
                     <div className="flex justify-around py-2">
-                        <div className="">stars{question.stars}</div>
+                    {liked ?
+                            <div className="bg-blue-500" onClick={() => RemoveLike()}>liked {question.stars.length}</div>
+                            :
+                            <div className="" onClick={() => AddLike()}>like  {question.stars.length}</div>
+
+                        }
                         <Link to="/discussion/56789"><div className="like">discuss</div></Link>
                     </div>
 
                 </div>
-            )): null}
+                : null}
 
         </>
     )

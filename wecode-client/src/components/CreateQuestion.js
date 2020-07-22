@@ -5,9 +5,30 @@ import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_cir
 import { ReactComponent as Backicon } from './icons/utilitiesicon/back.svg';
 import { ReactComponent as Downicon } from './icons/utilitiesicon/down-arrow.svg';
 
+import { useForm } from 'react-hook-form';
+import gql from 'graphql-tag';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import moment from 'moment';
 
+const CREATE_QUESTION = gql`
+    mutation CREATE_QUESTION($Userid: String, $displayname: String, $question: String,
+         $description: String, $tags: [String], $createdAt: String) {
+
+        Question(Userid: $Userid, , displayname: $displayname,question: $question, tags: $tags,
+            description: $description, createdAt: $createdAt) {
+            Userid,
+            displayname,
+            question
+            tags,
+            description,
+            createdAt
+        }
+    }
+
+`;
 
 const CreateQuestion = () => {
+    const localUserid = localStorage.getItem("Userid");
     const [tags, settags] = useState(false);
     const [taginput, settaginput] = useState(null);
     const [Tag_placehoder, setTag_placehoder] = useState(true);
@@ -62,6 +83,32 @@ const CreateQuestion = () => {
 
     const AnimatedDownicon = animated(Downicon);
 
+    // Submitting Questions
+    const [createQuestion] = useMutation(CREATE_QUESTION);
+    const { handleSubmit, register } = useForm();
+
+    const onSubmit = (data) => {
+        console.log(data);
+        const tags = [];
+        const tagsdiv = document.querySelector('#tags').childNodes;
+        for ( let x of tagsdiv) {
+            tags.push(x.innerHTML);
+        }
+
+        createQuestion({
+            variables: {
+                Userid: localUserid,
+                question: data.question,
+                description: data.description,
+                tags: tags,
+                createdAt: moment().format()
+
+            }
+        })
+
+
+    }
+
     return (
         <>
             {/* <AppBar /> */}
@@ -78,55 +125,58 @@ const CreateQuestion = () => {
                         <p className="py-3">Webstar</p>
                     </div>
 
-                    <input name="question" placeholder="Question" className="font-medium w-11/12 border-b border-black  outline-none pl-2 p-2 mb-6"></input>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <input name="question" placeholder="Question"
+                            className="font-medium w-11/12 border-b border-black  outline-none pl-2 p-2 mb-6" ref={register}></input>
 
-                    <div className={`flex-col w-11/12 border-b border-black outline-none pl-2 p-2 mb-6 `}>
-                        <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
-                        <textarea maxLength="512" className={`w-full outline-none`}
-                            placeholder="Description" onChange={(e) => handleTextlength(e)}  ></textarea>
-                    </div>
-
-
-                    <div className="flex justify-between w-11/12 border-b border-black pl-2 p-2 " onClick={() => showTags()}>
-                        <div id="tags" className="flex flex-wrap">
-                            {Tag_placehoder ? <p className="text-gray-500">Relevant tags</p> : null}
-                        </div>
-
-                        <AnimatedDownicon className="w-4" style={downpropsicon} />
-                    </div>
-
-                    {tags ?
-                        <div className="w-11/12 shadow bg-gray-200">
-                            <div className="flex border-b justify-between p-2">
-                                <input type="text" placeholder="Add tags" className="bg-transparent w-full p-2 pl-2 outline-none border-b border-black" onChange={(e) => handleChange(e.currentTarget.value)} />
-                                <button className="btn rounded-full bg-gray-900 px-3 py-2 text-white outline-none" onClick={() => addtags(taginput)}>Add</button>
-                            </div>
-                            <div className="flex flex-wrap mt-4">
-
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>html</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>css</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>js</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>react</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>nodejs</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>angular</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>vue</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>mongoDB</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>express</span>
-                                <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>c++</span>
-
-
-                            </div>
-
-
+                        <div className={`flex-col w-11/12 border-b border-black outline-none pl-2 p-2 mb-6 `}>
+                            <div className="mx-2 text-sm text-gray-500 text-right">{textlength}/512</div>
+                            <textarea maxLength="256" className={`w-full outline-none`} name="description"
+                                placeholder="Description" onChange={(e) => handleTextlength(e)} ref={register} ></textarea>
                         </div>
 
 
-                        : null}
+                        <div className="flex justify-between w-11/12 border-b border-black pl-2 p-2 " onClick={() => showTags()}>
+                            <div id="tags" className="flex flex-wrap">
+                                {Tag_placehoder ? <p className="text-gray-500">Relevant tags</p> : null}
+                            </div>
+
+                            <AnimatedDownicon className="w-4" style={downpropsicon} />
+                        </div>
+
+                        {tags ?
+                            <div className="w-11/12 shadow bg-gray-200">
+                                <div className="flex border-b justify-between p-2">
+                                    <input type="text" placeholder="Add tags" className="bg-transparent w-full p-2 pl-2 outline-none border-b border-black" onChange={(e) => handleChange(e.currentTarget.value)} />
+                                    <span className="btn rounded-full bg-gray-900 px-3 py-2 text-white outline-none" onClick={() => addtags(taginput)}>Add</span>
+                                </div>
+                                <div className="flex flex-wrap mt-4">
+
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>html</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>css</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>js</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>react</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>nodejs</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>angular</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>vue</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>mongoDB</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>express</span>
+                                    <span className="bg-gray-600 text-white px-3 py-1 self-center py-1 rounded-full mx-2 mb-2" onClick={(e) => addtags(e.currentTarget)}>c++</span>
 
 
-                    <div className="text-right mr-3 p-3 mb-3">
-                        <button className="btn p-2" onClick={() => Gohome()}>POST</button>
-                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            : null}
+
+
+                        <div className="text-right mr-3 p-3 mb-3">
+                            <button className="btn p-2" type="submit">POST</button>
+                        </div>
+                    </form>
                 </div>
 
 

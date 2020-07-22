@@ -11,6 +11,7 @@ const UserProfileSchema = new mongoose.Schema({
     education: String,
     ProfileImgref: String,
     post: Array,
+    question: Array,
     followers: Array,
     following: Array,
     timeline: Array

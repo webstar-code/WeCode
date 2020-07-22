@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 
 import { Link } from 'react-router-dom';
 import { ReactComponent as Profileicon } from './icons/utilitiesicon/account_circle.svg'

@@ -33,7 +33,7 @@ const People = ({ match }) => {
     const [activetab, setactivetab] = useState(true);
     let localUserid = localStorage.getItem('Userid');
     const { loading, data, error, refetch } = useQuery(GET_USER, {
-        variables: { displayname },
+        variables: { displayname }
 
     });
     console.log(data);

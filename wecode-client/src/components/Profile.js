@@ -44,6 +44,18 @@ query GET_USERPROFILE ($displayname: String){
             createdAt
 
         },
+        question {
+            _id
+            Userid,
+            displayname,
+            question
+            description
+            stars {
+                Userid
+            }
+            tags
+            createdAt
+        }
         following {
             displayname
         },
@@ -159,12 +171,12 @@ const Profile = ({ match }) => {
 
                         :
                         <div className="">
-                            {/* search through questions array and search for questions with Qid === admin.id */}
-                            {/* map through array of questions and give each question a QID prop */}
+                            {data.user.question.map(question => (
+                            <Question  question={question} displayname={data.user.displayname} ProfileImgref={data.user.ProfileImgref}/>
 
-                            <Question />
-                            <Question />
-                            <Question />
+                            ))
+                        }
+                     
 
                         </div>
                     }
